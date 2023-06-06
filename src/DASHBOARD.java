@@ -1,7 +1,6 @@
 
 import java.awt.CardLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -9,28 +8,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.UUID;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -64,6 +58,9 @@ public class DASHBOARD extends javax.swing.JFrame {
         candidatesDetails.setVisible(false);
 
         RETRIEVE_CANDIDATE();
+        DISPLAY_ACCOUNT_JUDGE();
+        DISPLAY_ACCOUNT_JUDGE();
+        DISPLAY_CRITERIA();
 
         CANDIDATE_SELECTED_GENDER.setVisible(false);
 
@@ -85,8 +82,25 @@ public class DASHBOARD extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
         PAGES = new javax.swing.JPanel();
+        MAIN_PANEL = new javax.swing.JPanel();
         JUDGES = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        CREATE_FULLNAME = new javax.swing.JTextField();
+        CREATE_USERNAME = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        CREATE_WARNING = new javax.swing.JLabel();
+        CREATE_PASSWORD = new javax.swing.JPasswordField();
+        CREATE_REPASSWORD = new javax.swing.JPasswordField();
+        jLabel13 = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        JUDGE_TABLE_ACCOUNTS = new javax.swing.JTable();
         CANDITATES = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
@@ -105,6 +119,16 @@ public class DASHBOARD extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         LIST_OF_CANDIDATES = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
+        CRITERIA = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        CRITERIA_OUTOF = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        CRITERIA_TITLE = new javax.swing.JTextField();
+        jButton6 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        CRITERIA_TABLE = new javax.swing.JTable();
+        TABULATION = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -127,29 +151,129 @@ public class DASHBOARD extends javax.swing.JFrame {
         });
         jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 200, 41));
 
-        jButton3.setText("TABULATION");
+        jButton3.setText("MANAGE CRITERIA");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 200, 41));
 
         jLabel1.setText("DASDADA");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 590, 40, -1));
+
+        jButton7.setText("TABULATION");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 330, 200, 41));
 
         jSplitPane1.setLeftComponent(jPanel1);
 
         PAGES.setBackground(new java.awt.Color(204, 255, 204));
         PAGES.setLayout(new java.awt.CardLayout());
 
-        JUDGES.setBackground(new java.awt.Color(204, 255, 255));
+        MAIN_PANEL.setBackground(new java.awt.Color(255, 153, 255));
 
-        javax.swing.GroupLayout JUDGESLayout = new javax.swing.GroupLayout(JUDGES);
-        JUDGES.setLayout(JUDGESLayout);
-        JUDGESLayout.setHorizontalGroup(
-            JUDGESLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1073, Short.MAX_VALUE)
+        javax.swing.GroupLayout MAIN_PANELLayout = new javax.swing.GroupLayout(MAIN_PANEL);
+        MAIN_PANEL.setLayout(MAIN_PANELLayout);
+        MAIN_PANELLayout.setHorizontalGroup(
+            MAIN_PANELLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-        JUDGESLayout.setVerticalGroup(
-            JUDGESLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 699, Short.MAX_VALUE)
+        MAIN_PANELLayout.setVerticalGroup(
+            MAIN_PANELLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
+
+        PAGES.add(MAIN_PANEL, "card4");
+
+        JUDGES.setBackground(new java.awt.Color(204, 255, 255));
+        JUDGES.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel3.setBackground(new java.awt.Color(26, 46, 53));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 217, 90));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("CREATE JUDGE ACCOUNT");
+        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 290, 30));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 217, 90));
+        jLabel8.setText("FULL NAME");
+        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, 80, 20));
+
+        jLabel10.setText("CLECK");
+        jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel10MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jLabel10MouseReleased(evt);
+            }
+        });
+        jPanel3.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 230, 50, 40));
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 217, 90));
+        jLabel11.setText("ENTER USERNAME");
+        jPanel3.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 160, 110, 20));
+        jPanel3.add(CREATE_FULLNAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, 230, 30));
+        jPanel3.add(CREATE_USERNAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 180, 230, 30));
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 217, 90));
+        jLabel12.setText("ENTER PASSWORD");
+        jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, 110, 20));
+
+        CREATE_WARNING.setForeground(new java.awt.Color(255, 217, 90));
+        CREATE_WARNING.setText(" ");
+        jPanel3.add(CREATE_WARNING, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 340, 140, 20));
+        jPanel3.add(CREATE_PASSWORD, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 242, 230, 30));
+
+        CREATE_REPASSWORD.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                CREATE_REPASSWORDKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                CREATE_REPASSWORDKeyTyped(evt);
+            }
+        });
+        jPanel3.add(CREATE_REPASSWORD, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 300, 230, 30));
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 217, 90));
+        jLabel13.setText("RE-ENTER PASSWORD");
+        jPanel3.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 280, 130, 20));
+
+        jButton5.setText("CREATE");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 380, 170, 40));
+
+        JUDGES.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 400, 530));
+
+        JUDGE_TABLE_ACCOUNTS.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(JUDGE_TABLE_ACCOUNTS);
+
+        JUDGES.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 90, 520, 530));
 
         PAGES.add(JUDGES, "PAGE_2");
 
@@ -231,6 +355,62 @@ public class DASHBOARD extends javax.swing.JFrame {
 
         PAGES.add(CANDITATES, "PAGE_1");
 
+        CRITERIA.setBackground(new java.awt.Color(102, 102, 0));
+        CRITERIA.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel5.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel5.add(CRITERIA_OUTOF, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, 70, 41));
+
+        jLabel9.setText("OUT OF NO. (ex. /10)");
+        jPanel5.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 130, -1));
+
+        jLabel14.setText("CRITERIA TITLE");
+        jPanel5.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 100, -1));
+        jPanel5.add(CRITERIA_TITLE, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 253, 41));
+
+        jButton6.setText("ADD CRITERIA");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jPanel5.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 220, 40));
+
+        CRITERIA.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 116, 330, 350));
+
+        CRITERIA_TABLE.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(CRITERIA_TABLE);
+
+        CRITERIA.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 60, 490, 530));
+
+        PAGES.add(CRITERIA, "CRITERIA");
+
+        TABULATION.setBackground(new java.awt.Color(255, 153, 153));
+
+        javax.swing.GroupLayout TABULATIONLayout = new javax.swing.GroupLayout(TABULATION);
+        TABULATION.setLayout(TABULATIONLayout);
+        TABULATIONLayout.setHorizontalGroup(
+            TABULATIONLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1076, Short.MAX_VALUE)
+        );
+        TABULATIONLayout.setVerticalGroup(
+            TABULATIONLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 699, Short.MAX_VALUE)
+        );
+
+        PAGES.add(TABULATION, "card6");
+
         jSplitPane1.setRightComponent(PAGES);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -302,6 +482,40 @@ public class DASHBOARD extends javax.swing.JFrame {
         CANDIDATE_SELECTED_GENDER.setText("Male");
     }//GEN-LAST:event_CANDIDATE_MALEActionPerformed
 
+    private void jLabel10MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MousePressed
+        CREATE_PASSWORD.setEchoChar((char) 0);
+    }//GEN-LAST:event_jLabel10MousePressed
+
+    private void jLabel10MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseReleased
+        CREATE_PASSWORD.setEchoChar('*');
+    }//GEN-LAST:event_jLabel10MouseReleased
+
+    private void CREATE_REPASSWORDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CREATE_REPASSWORDKeyReleased
+        checkPasswordMatch();
+    }//GEN-LAST:event_CREATE_REPASSWORDKeyReleased
+
+    private void CREATE_REPASSWORDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CREATE_REPASSWORDKeyTyped
+
+    }//GEN-LAST:event_CREATE_REPASSWORDKeyTyped
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        CREATE_ACCOUNT();
+        DISPLAY_ACCOUNT_JUDGE();
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        ADD_CRITERIA();
+        DISPLAY_CRITERIA();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+         cardLayout.show(PAGES, "CRITERIA");
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton7ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -346,23 +560,50 @@ public class DASHBOARD extends javax.swing.JFrame {
     private javax.swing.JTextField CANDIDATE_NAME;
     private javax.swing.JLabel CANDIDATE_SELECTED_GENDER;
     private javax.swing.JPanel CANDITATES;
+    private javax.swing.JTextField CREATE_FULLNAME;
+    private javax.swing.JPasswordField CREATE_PASSWORD;
+    private javax.swing.JPasswordField CREATE_REPASSWORD;
+    private javax.swing.JTextField CREATE_USERNAME;
+    private javax.swing.JLabel CREATE_WARNING;
+    private javax.swing.JPanel CRITERIA;
+    private javax.swing.JTextField CRITERIA_OUTOF;
+    private javax.swing.JTable CRITERIA_TABLE;
+    private javax.swing.JTextField CRITERIA_TITLE;
     private javax.swing.JPanel JUDGES;
+    private javax.swing.JTable JUDGE_TABLE_ACCOUNTS;
     private javax.swing.JPanel LIST_OF_CANDIDATES;
+    private javax.swing.JPanel MAIN_PANEL;
     private javax.swing.JPanel PAGES;
+    private javax.swing.JPanel TABULATION;
     private javax.swing.JButton UPLOAD_BUTTON;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
 
@@ -455,6 +696,115 @@ public class DASHBOARD extends javax.swing.JFrame {
             // Refresh the panel to update its content
             LIST_OF_CANDIDATES.revalidate();
             LIST_OF_CANDIDATES.repaint();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void checkPasswordMatch() {
+        if (!Arrays.equals(CREATE_REPASSWORD.getPassword(), CREATE_PASSWORD.getPassword())) {
+            CREATE_WARNING.setText("Passwords do not match");
+        } else {
+            CREATE_WARNING.setText("Passwords match");
+        }
+    }
+
+    private void CREATE_ACCOUNT() {
+        try {
+
+            String sql = "INSERT INTO judge (fullname, username, password, account_type) VALUES (?, ?, ?, ?)";
+
+            pst = conn.prepareStatement(sql);
+            pst.setString(1, CREATE_FULLNAME.getText());
+            pst.setString(2, CREATE_USERNAME.getText());
+            String password = new String(CREATE_REPASSWORD.getPassword());
+            pst.setString(3, password);
+            pst.setString(4, "Judge");
+
+            pst.execute();
+
+            JOptionPane.showMessageDialog(null, "Succesfully created a judge account");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, "Error");
+
+        }
+    }
+
+    private void DISPLAY_ACCOUNT_JUDGE() {
+        try {
+            String query = "SELECT fullname, username, account_type FROM judge";
+            pst = conn.prepareStatement(query);
+            rs = pst.executeQuery();
+
+            // Create the table model with column names
+            DefaultTableModel tableModel = new DefaultTableModel();
+            tableModel.addColumn("Full Name");
+            tableModel.addColumn("Username");
+            tableModel.addColumn("Account Type");
+
+            // Populate the table model with data from the result set
+            while (rs.next()) {
+                String fullName = rs.getString("fullname");
+                String username = rs.getString("username");
+                String accountType = rs.getString("account_type");
+
+                // Add a row to the table model
+                tableModel.addRow(new Object[]{fullName, username, accountType});
+            }
+
+            // Set the table model for the existing JTable component
+            JUDGE_TABLE_ACCOUNTS.setModel(tableModel);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+    
+    
+        private void ADD_CRITERIA() {
+        try {
+
+            String sql = "INSERT INTO criteria (title, outof) VALUES (?, ?)";
+
+            pst = conn.prepareStatement(sql);
+            pst.setString(1, CRITERIA_TITLE.getText());
+            pst.setInt(2, Integer.parseInt(CRITERIA_OUTOF.getText()));
+
+            pst.execute();
+
+            JOptionPane.showMessageDialog(null, "Succesfully added the criteria");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, "Error");
+
+        }
+    }
+        
+        private void DISPLAY_CRITERIA() {
+        try {
+            String query = "SELECT title, outof FROM criteria";
+            pst = conn.prepareStatement(query);
+            rs = pst.executeQuery();
+
+            DefaultTableModel tableModel = new DefaultTableModel();
+            tableModel.addColumn("Title");
+            tableModel.addColumn("Out of");
+
+            // Populate the table model with data from the result set
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String outof = rs.getString("outof");
+
+                // Add a row to the table model
+                tableModel.addRow(new Object[]{title, outof});
+            }
+
+            // Set the table model for the existing JTable component
+            CRITERIA_TABLE.setModel(tableModel);
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
