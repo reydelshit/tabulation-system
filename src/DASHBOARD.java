@@ -84,7 +84,19 @@ public class DASHBOARD extends javax.swing.JFrame {
                     int id = (int) LIST_OF_CANDIDATES_TABLE.getValueAt(row, 0);
                     candidatesDetails.RETRIEVE_CANDIDATE(id);
                     candidatesDetails.setVisible(true);
-                    System.out.println("dniashbd");
+//                    System.out.println("dniashbd");
+                }
+            }
+        });
+
+        CANDIDATE_CATEGORY_DROPDOWN.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Object selectedBatch = CANDIDATE_CATEGORY_DROPDOWN.getSelectedItem();
+                if (selectedBatch.equals("All")) {
+                    RETRIEVE_CANDIDATE();
+                } else {
+                    RETRIEVE_CANDIDATE_BYCATEGORY();
+
                 }
             }
         });
@@ -377,7 +389,7 @@ public class DASHBOARD extends javax.swing.JFrame {
         CANDITATES.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 30, 150, 40));
 
         CANDIDATE_CATEGORY_DROPDOWN.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Teenager(Male)", "Teenager(Female)", "Kids(Male)", "Kids(Female)" }));
-        CANDITATES.add(CANDIDATE_CATEGORY_DROPDOWN, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 80, 140, 30));
+        CANDITATES.add(CANDIDATE_CATEGORY_DROPDOWN, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 80, 140, 30));
 
         LIST_OF_CANDIDATES_TABLE.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -699,10 +711,10 @@ public class DASHBOARD extends javax.swing.JFrame {
 
             if (storeAge > 13) {
                 pst.setString(5, "Teenager");
-                candidateNo = GETCANDIDATE_NUMBER("Teenager");
+                candidateNo = GETCANDIDATE_NUMBER("Teenager", CANDIDATE_SELECTED_GENDER.getText());
             } else {
                 pst.setString(5, "Kids");
-                candidateNo = GETCANDIDATE_NUMBER("Kids");
+                candidateNo = GETCANDIDATE_NUMBER("Kids", CANDIDATE_SELECTED_GENDER.getText());
             }
 
             pst.setInt(6, candidateNo);
@@ -716,13 +728,14 @@ public class DASHBOARD extends javax.swing.JFrame {
         }
     }
 
-    private int GETCANDIDATE_NUMBER(String category) {
+    private int GETCANDIDATE_NUMBER(String category, String gender) {
         int candidateNo = 0;
 
         try {
-            String query = "SELECT MAX(candidate_no) FROM candidate WHERE category = ?";
+            String query = "SELECT MAX(candidate_no) FROM candidate WHERE category = ? AND gender = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setString(1, category);
+            pstmt.setString(2, gender);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -770,8 +783,58 @@ public class DASHBOARD extends javax.swing.JFrame {
                 // Add a row to the table model
                 tableModel.addRow(new Object[]{id, name, candidateNo, pressMe});
             }
-            
-            
+
+            LIST_OF_CANDIDATES_TABLE.setCellSelectionEnabled(false);
+            LIST_OF_CANDIDATES_TABLE.setModel(tableModel);
+            tableModel.fireTableDataChanged();
+            // Refresh the table to update its content
+            tableModel.fireTableDataChanged();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void RETRIEVE_CANDIDATE_BYCATEGORY() {
+        try {
+            DefaultTableModel tableModel = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            // Clear the existing data in the table
+            tableModel.setRowCount(0);
+
+            String selectedCategory = (String) CANDIDATE_CATEGORY_DROPDOWN.getSelectedItem();
+
+            String query = "SELECT id, name, candidate_no FROM candidate WHERE category = ? AND gender = ?";
+            pst = conn.prepareStatement(query);
+            if (selectedCategory.contains("Teenager") && selectedCategory.contains("Male")) {
+                pst.setString(1, "Teenager");
+                pst.setString(2, "Male");
+            } else if (selectedCategory.contains("Teenager") && selectedCategory.contains("Female")) {
+                pst.setString(1, "Teenager");
+                pst.setString(2, "Female");
+            }
+
+            rs = pst.executeQuery();
+
+            // Define column names for the table
+            String[] columnNames = {"id", "Name", "Candidate No.", "Action"};
+
+            tableModel.setColumnIdentifiers(columnNames);
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                int candidateNo = rs.getInt("candidate_no");
+
+                String pressMe = "View Details";
+                // Add a row to the table model
+                tableModel.addRow(new Object[]{id, name, candidateNo, pressMe});
+            }
+
             LIST_OF_CANDIDATES_TABLE.setCellSelectionEnabled(false);
             LIST_OF_CANDIDATES_TABLE.setModel(tableModel);
             tableModel.fireTableDataChanged();
