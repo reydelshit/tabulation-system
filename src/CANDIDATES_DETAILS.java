@@ -62,25 +62,25 @@ public class CANDIDATES_DETAILS extends javax.swing.JFrame {
         CANDIDATES_DETAILS_NAME.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         CANDIDATES_DETAILS_NAME.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         CANDIDATES_DETAILS_NAME.setText("name");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_NAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 290, 240, 42));
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_NAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 190, 240, 42));
 
         CANDIDATES_DETAILS_AGE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         CANDIDATES_DETAILS_AGE.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         CANDIDATES_DETAILS_AGE.setText("age");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_AGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 340, 240, 42));
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_AGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 240, 240, 42));
 
         CANDIDATES_DETAILS_BIRTHDAY.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         CANDIDATES_DETAILS_BIRTHDAY.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         CANDIDATES_DETAILS_BIRTHDAY.setText("birthday");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_BIRTHDAY, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 400, 240, 42));
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_BIRTHDAY, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 300, 240, 42));
 
         CANDIDATES_DETAILS_CATEGORY.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         CANDIDATES_DETAILS_CATEGORY.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         CANDIDATES_DETAILS_CATEGORY.setText("category");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_CATEGORY, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 460, 240, 42));
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_CATEGORY, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 360, 240, 42));
 
         CANDIDATES_DETAILS_IMAGE.setText("jLabel1");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_IMAGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 20, 350, 250));
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_IMAGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 460, 510));
 
         jButton1.setText("close");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -88,7 +88,7 @@ public class CANDIDATES_DETAILS extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        CANDIDATE_DETAILS.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 600, -1, -1));
+        CANDIDATE_DETAILS.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 500, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

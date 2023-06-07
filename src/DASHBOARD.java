@@ -1,11 +1,15 @@
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -24,7 +28,11 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -65,7 +73,24 @@ public class DASHBOARD extends javax.swing.JFrame {
         CANDIDATE_SELECTED_GENDER.setVisible(false);
 
         cardLayout = (CardLayout) (PAGES.getLayout());
+
+        LIST_OF_CANDIDATES_TABLE.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                int column = LIST_OF_CANDIDATES_TABLE.getColumnModel().getColumnIndexAtX(evt.getX());
+                int row = evt.getY() / LIST_OF_CANDIDATES_TABLE.getRowHeight();
+
+                if (row < LIST_OF_CANDIDATES_TABLE.getRowCount() && column == 3) {
+                    int id = (int) LIST_OF_CANDIDATES_TABLE.getValueAt(row, 0);
+                    candidatesDetails.RETRIEVE_CANDIDATE(id);
+                    candidatesDetails.setVisible(true);
+                    System.out.println("dniashbd");
+                }
+            }
+        });
     }
+
+    private byte[] selectedImageData;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -113,12 +138,14 @@ public class DASHBOARD extends javax.swing.JFrame {
         CANDIDATE_MALE = new javax.swing.JRadioButton();
         CANDIDATE_FEMALE = new javax.swing.JRadioButton();
         CANDIDATE_SELECTED_GENDER = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        LIST_OF_CANDIDATES = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        CANDIDATE_CATEGORY_DROPDOWN = new javax.swing.JComboBox<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        LIST_OF_CANDIDATES_TABLE = new javax.swing.JTable();
         CRITERIA = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         CRITERIA_OUTOF = new javax.swing.JTextField();
@@ -296,16 +323,16 @@ public class DASHBOARD extends javax.swing.JFrame {
                 UPLOAD_BUTTONActionPerformed(evt);
             }
         });
-        jPanel2.add(UPLOAD_BUTTON, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 60, 110, 30));
+        jPanel2.add(UPLOAD_BUTTON, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, 110, 30));
 
         CANDIDATE_IMAGE_LABEL.setText("IMG DIRIA HA");
-        jPanel2.add(CANDIDATE_IMAGE_LABEL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 170, 160));
+        jPanel2.add(CANDIDATE_IMAGE_LABEL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 220, 210));
 
         jPanel4.setBackground(new java.awt.Color(204, 204, 255));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel4.add(CANDIDATE_NAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 40, 170, 40));
-        jPanel4.add(CANDIDATE_AGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 110, 170, 40));
-        jPanel4.add(CANDIDATE_BDATE, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 190, 170, 40));
+        jPanel4.add(CANDIDATE_NAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 170, 40));
+        jPanel4.add(CANDIDATE_AGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 170, 40));
+        jPanel4.add(CANDIDATE_BDATE, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 170, 40));
 
         CANDIDATE_MALE.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         CANDIDATE_MALE.setText("MALE");
@@ -314,7 +341,7 @@ public class DASHBOARD extends javax.swing.JFrame {
                 CANDIDATE_MALEActionPerformed(evt);
             }
         });
-        jPanel4.add(CANDIDATE_MALE, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 260, -1, -1));
+        jPanel4.add(CANDIDATE_MALE, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 40, -1, -1));
 
         CANDIDATE_FEMALE.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         CANDIDATE_FEMALE.setText("FEMALE");
@@ -323,35 +350,59 @@ public class DASHBOARD extends javax.swing.JFrame {
                 CANDIDATE_FEMALEActionPerformed(evt);
             }
         });
-        jPanel4.add(CANDIDATE_FEMALE, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 260, -1, -1));
+        jPanel4.add(CANDIDATE_FEMALE, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 40, -1, -1));
 
         CANDIDATE_SELECTED_GENDER.setText("yes");
-        jPanel4.add(CANDIDATE_SELECTED_GENDER, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 40, 30));
-
-        jLabel2.setText("Gender");
-        jPanel4.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 60, -1));
+        jPanel4.add(CANDIDATE_SELECTED_GENDER, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 60, 40, 30));
 
         jLabel3.setText("Fullname");
-        jPanel4.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 60, -1));
+        jPanel4.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 60, -1));
 
         jLabel4.setText("Age");
-        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 90, 60, -1));
+        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 60, -1));
 
         jLabel5.setText("Birthday");
-        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, 60, -1));
+        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 60, -1));
 
-        jPanel2.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 390, 340));
+        jLabel15.setText("Gender");
+        jPanel4.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 20, 60, -1));
+
+        jPanel2.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, 390, 260));
 
         CANDITATES.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 430, 610));
-
-        LIST_OF_CANDIDATES.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        LIST_OF_CANDIDATES.setLayout(new javax.swing.BoxLayout(LIST_OF_CANDIDATES, javax.swing.BoxLayout.Y_AXIS));
-        CANDITATES.add(LIST_OF_CANDIDATES, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 90, 300, 570));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("LIST OF CANDIDATES");
-        CANDITATES.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 50, 190, 40));
+        CANDITATES.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 30, 150, 40));
+
+        CANDIDATE_CATEGORY_DROPDOWN.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Teenager(Male)", "Teenager(Female)", "Kids(Male)", "Kids(Female)" }));
+        CANDITATES.add(CANDIDATE_CATEGORY_DROPDOWN, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 80, 140, 30));
+
+        LIST_OF_CANDIDATES_TABLE.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Candidate No", "Button"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(LIST_OF_CANDIDATES_TABLE);
+        if (LIST_OF_CANDIDATES_TABLE.getColumnModel().getColumnCount() > 0) {
+            LIST_OF_CANDIDATES_TABLE.getColumnModel().getColumn(0).setResizable(false);
+            LIST_OF_CANDIDATES_TABLE.getColumnModel().getColumn(1).setResizable(false);
+            LIST_OF_CANDIDATES_TABLE.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        CANDITATES.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 130, -1, 530));
 
         PAGES.add(CANDITATES, "PAGE_1");
 
@@ -454,13 +505,33 @@ public class DASHBOARD extends javax.swing.JFrame {
                 fis.read(imageData);
                 fis.close();
 
+                selectedImageData = imageData;
+
                 // Display the selected image
                 ImageIcon imageIcon = new ImageIcon(imageData);
-                Image scaledImage = imageIcon.getImage().getScaledInstance(CANDIDATE_IMAGE_LABEL.getWidth(), CANDIDATE_IMAGE_LABEL.getHeight(), Image.SCALE_SMOOTH);
+                int labelWidth = CANDIDATE_IMAGE_LABEL.getWidth();
+                int labelHeight = CANDIDATE_IMAGE_LABEL.getHeight();
+                Image originalImage = imageIcon.getImage();
+                int originalWidth = originalImage.getWidth(null);
+                int originalHeight = originalImage.getHeight(null);
+
+                // Calculate the scaling factors for width and height
+                double widthScaleFactor = (double) labelWidth / originalWidth;
+                double heightScaleFactor = (double) labelHeight / originalHeight;
+
+                // Use the higher scaling factor to maintain aspect ratio and choose the minimum scale factor
+                double scale = Math.min(widthScaleFactor, heightScaleFactor) * 2;
+
+                // Calculate the scaled dimensions
+                int scaledWidth = (int) (originalWidth * scale);
+                int scaledHeight = (int) (originalHeight * scale);
+
+                // Create a scaled instance of the image
+                Image scaledImage = originalImage.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
 
                 // Update the label with the scaled image
                 CANDIDATE_IMAGE_LABEL.setIcon(new ImageIcon(scaledImage));
-//                System.out.println("Image selected and displayed successfully.");
+                // System.out.println("Image selected and displayed successfully.");
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
@@ -509,7 +580,7 @@ public class DASHBOARD extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-         cardLayout.show(PAGES, "CRITERIA");
+        cardLayout.show(PAGES, "CRITERIA");
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -554,6 +625,7 @@ public class DASHBOARD extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField CANDIDATE_AGE;
     private com.toedter.calendar.JDateChooser CANDIDATE_BDATE;
+    private javax.swing.JComboBox<String> CANDIDATE_CATEGORY_DROPDOWN;
     private javax.swing.JRadioButton CANDIDATE_FEMALE;
     private javax.swing.JLabel CANDIDATE_IMAGE_LABEL;
     private javax.swing.JRadioButton CANDIDATE_MALE;
@@ -571,7 +643,7 @@ public class DASHBOARD extends javax.swing.JFrame {
     private javax.swing.JTextField CRITERIA_TITLE;
     private javax.swing.JPanel JUDGES;
     private javax.swing.JTable JUDGE_TABLE_ACCOUNTS;
-    private javax.swing.JPanel LIST_OF_CANDIDATES;
+    private javax.swing.JTable LIST_OF_CANDIDATES_TABLE;
     private javax.swing.JPanel MAIN_PANEL;
     private javax.swing.JPanel PAGES;
     private javax.swing.JPanel TABULATION;
@@ -589,7 +661,7 @@ public class DASHBOARD extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -604,98 +676,107 @@ public class DASHBOARD extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
 
     private void ADD_CANDIDATES() {
 
         try {
-            // Get the image from the label
-            ImageIcon imageIcon = (ImageIcon) CANDIDATE_IMAGE_LABEL.getIcon();
-            Image image = imageIcon.getImage();
-
-            // Convert the image to byte array
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2 = bufferedImage.createGraphics();
-            g2.drawImage(image, 0, 0, null);
-            g2.dispose();
-            ImageIO.write(bufferedImage, "jpg", baos);
-            byte[] imageData = baos.toByteArray();
-            baos.close();
-
 //            upload details to database 
             Date selectedDate = CANDIDATE_BDATE.getDate();
             String dateString = new java.sql.Date(selectedDate.getTime()).toString();
 
-            String sql = "INSERT INTO candidate (name, birthday, age, category, image) VALUES (?, ?, ?, ?, ?)";
-
+            String sql = "INSERT INTO candidate (name, birthday, age, gender, category, candidate_no, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
             pst = conn.prepareStatement(sql);
             pst.setString(1, CANDIDATE_NAME.getText());
             pst.setString(2, dateString);
             pst.setInt(3, Integer.parseInt(CANDIDATE_AGE.getText()));
+            pst.setString(4, CANDIDATE_SELECTED_GENDER.getText());
 
             int storeAge = Integer.parseInt(CANDIDATE_AGE.getText());
+            int candidateNo;
 
             if (storeAge > 13) {
-                pst.setString(4, "Teenager");
+                pst.setString(5, "Teenager");
+                candidateNo = GETCANDIDATE_NUMBER("Teenager");
             } else {
-                pst.setString(4, "Kids");
+                pst.setString(5, "Kids");
+                candidateNo = GETCANDIDATE_NUMBER("Kids");
             }
 
-            pst.setBytes(5, imageData);
+            pst.setInt(6, candidateNo);
+            pst.setBytes(7, selectedImageData);
 
             pst.execute();
 
-            JOptionPane.showMessageDialog(null, "candidate is added");
+            JOptionPane.showMessageDialog(null, "Candidate is added");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
 
-    private void RETRIEVE_CANDIDATE() {
+    private int GETCANDIDATE_NUMBER(String category) {
+        int candidateNo = 0;
 
         try {
-            String query = "SELECT id, name FROM candidate";
+            String query = "SELECT MAX(candidate_no) FROM candidate WHERE category = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, category);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                candidateNo = rs.getInt(1);
+            }
+
+            candidateNo++;
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+        return candidateNo;
+    }
+
+    private void RETRIEVE_CANDIDATE() {
+        try {
+            DefaultTableModel tableModel = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            // Clear the existing data in the table
+            tableModel.setRowCount(0);
+
+            String query = "SELECT id, name, candidate_no FROM candidate";
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
+
+            // Define column names for the table
+            String[] columnNames = {"id", "Name", "Candidate No.", "Action"};
+
+            tableModel.setColumnIdentifiers(columnNames);
 
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
+                int candidateNo = rs.getInt("candidate_no");
 
-                // Create a horizontal Box container
-                Box horizontalBox = Box.createHorizontalBox();
-
-                //candidate's name
-                JLabel label = new JLabel(name);
-                label.setAlignmentX(Component.CENTER_ALIGNMENT);
-                label.setFont(label.getFont().deriveFont(Font.BOLD, 10f));
-
-                int rightMargin = 10;
-                label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, rightMargin));
-
-                // button for the image
-                JButton button = new JButton("View details");
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        candidatesDetails.RETRIEVE_CANDIDATE(id);
-                        candidatesDetails.setVisible(true);
-                    }
-                });
-
-                // Add the label and button to the horizontal Box container
-                horizontalBox.add(label);
-                horizontalBox.add(button);
-
-                LIST_OF_CANDIDATES.add(horizontalBox);
-                LIST_OF_CANDIDATES.add(Box.createVerticalStrut(10));
+                String pressMe = "View Details";
+                // Add a row to the table model
+                tableModel.addRow(new Object[]{id, name, candidateNo, pressMe});
             }
-
-            // Refresh the panel to update its content
-            LIST_OF_CANDIDATES.revalidate();
-            LIST_OF_CANDIDATES.repaint();
+            
+            
+            LIST_OF_CANDIDATES_TABLE.setCellSelectionEnabled(false);
+            LIST_OF_CANDIDATES_TABLE.setModel(tableModel);
+            tableModel.fireTableDataChanged();
+            // Refresh the table to update its content
+            tableModel.fireTableDataChanged();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -761,9 +842,8 @@ public class DASHBOARD extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-    
-    
-        private void ADD_CRITERIA() {
+
+    private void ADD_CRITERIA() {
         try {
 
             String sql = "INSERT INTO criteria (title, outof) VALUES (?, ?)";
@@ -782,8 +862,8 @@ public class DASHBOARD extends javax.swing.JFrame {
 
         }
     }
-        
-        private void DISPLAY_CRITERIA() {
+
+    private void DISPLAY_CRITERIA() {
         try {
             String query = "SELECT title, outof FROM criteria";
             pst = conn.prepareStatement(query);

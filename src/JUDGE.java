@@ -1,8 +1,23 @@
+
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Reydel
@@ -12,8 +27,20 @@ public class JUDGE extends javax.swing.JFrame {
     /**
      * Creates new form JUDGE
      */
+    Connection conn = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    CardLayout cardLayout;
+
     public JUDGE() {
+        conn = DBConnection.getConnection();
         initComponents();
+
+        RETRIEVE_CANDIDATE();
+
+        cardLayout = (CardLayout) (PAGES.getLayout());
+
+        CANDIDATE_DETAILS.setVisible(false);
     }
 
     /**
@@ -25,21 +52,188 @@ public class JUDGE extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
+        PAGES = new javax.swing.JPanel();
+        MAIN_PANEL = new javax.swing.JPanel();
+        CANDITATES = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        CANDIDATE_DETAILS = new javax.swing.JPanel();
+        CANDIDATES_DETAILS_NAME = new javax.swing.JLabel();
+        CANDIDATES_DETAILS_AGE = new javax.swing.JLabel();
+        CANDIDATES_DETAILS_BIRTHDAY = new javax.swing.JLabel();
+        CANDIDATES_DETAILS_CATEGORY = new javax.swing.JLabel();
+        CANDIDATES_DETAILS_IMAGE = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        LIST_OF_CANDIDATES = new javax.swing.JTable();
+        TABULATION = new javax.swing.JPanel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(255, 204, 204));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jButton2.setText("CANDIDATES");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 200, 41));
+
+        jLabel1.setText("DASDADA");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 590, 40, -1));
+
+        jButton7.setText("GRADE");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 200, 41));
+
+        jSplitPane1.setLeftComponent(jPanel1);
+
+        PAGES.setBackground(new java.awt.Color(204, 255, 204));
+        PAGES.setLayout(new java.awt.CardLayout());
+
+        MAIN_PANEL.setBackground(new java.awt.Color(255, 153, 255));
+
+        javax.swing.GroupLayout MAIN_PANELLayout = new javax.swing.GroupLayout(MAIN_PANEL);
+        MAIN_PANEL.setLayout(MAIN_PANELLayout);
+        MAIN_PANELLayout.setHorizontalGroup(
+            MAIN_PANELLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        MAIN_PANELLayout.setVerticalGroup(
+            MAIN_PANELLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        PAGES.add(MAIN_PANEL, "card4");
+
+        CANDITATES.setBackground(new java.awt.Color(102, 102, 0));
+        CANDITATES.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("LIST OF CANDIDATES");
+        CANDITATES.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 190, 40));
+
+        CANDIDATE_DETAILS.setBackground(new java.awt.Color(204, 204, 255));
+        CANDIDATE_DETAILS.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        CANDIDATES_DETAILS_NAME.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        CANDIDATES_DETAILS_NAME.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CANDIDATES_DETAILS_NAME.setText("name");
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_NAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 290, 240, 42));
+
+        CANDIDATES_DETAILS_AGE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        CANDIDATES_DETAILS_AGE.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CANDIDATES_DETAILS_AGE.setText("age");
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_AGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 340, 240, 42));
+
+        CANDIDATES_DETAILS_BIRTHDAY.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        CANDIDATES_DETAILS_BIRTHDAY.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CANDIDATES_DETAILS_BIRTHDAY.setText("birthday");
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_BIRTHDAY, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 400, 240, 42));
+
+        CANDIDATES_DETAILS_CATEGORY.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        CANDIDATES_DETAILS_CATEGORY.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CANDIDATES_DETAILS_CATEGORY.setText("category");
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_CATEGORY, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 460, 240, 42));
+
+        CANDIDATES_DETAILS_IMAGE.setText("jLabel1");
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_IMAGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 20, 350, 250));
+
+        jButton1.setText("close");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        CANDIDATE_DETAILS.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 600, -1, -1));
+
+        CANDITATES.add(CANDIDATE_DETAILS, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 30, -1, -1));
+
+        LIST_OF_CANDIDATES.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null},
+                {null},
+                {null},
+                {null}
+            },
+            new String [] {
+                "Candidates"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(LIST_OF_CANDIDATES);
+        if (LIST_OF_CANDIDATES.getColumnModel().getColumnCount() > 0) {
+            LIST_OF_CANDIDATES.getColumnModel().getColumn(0).setResizable(false);
+        }
+
+        CANDITATES.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 240, 560));
+
+        PAGES.add(CANDITATES, "PAGE_1");
+
+        TABULATION.setBackground(new java.awt.Color(255, 153, 153));
+
+        javax.swing.GroupLayout TABULATIONLayout = new javax.swing.GroupLayout(TABULATION);
+        TABULATION.setLayout(TABULATIONLayout);
+        TABULATIONLayout.setHorizontalGroup(
+            TABULATIONLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1076, Short.MAX_VALUE)
+        );
+        TABULATIONLayout.setVerticalGroup(
+            TABULATIONLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 699, Short.MAX_VALUE)
+        );
+
+        PAGES.add(TABULATION, "GRADE");
+
+        jSplitPane1.setRightComponent(PAGES);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 786, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 457, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 699, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        cardLayout.show(PAGES, "PAGE_1");
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        cardLayout.show(PAGES, "GRADE");
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        setVisible(false);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -77,5 +271,49 @@ public class JUDGE extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel CANDIDATES_DETAILS_AGE;
+    private javax.swing.JLabel CANDIDATES_DETAILS_BIRTHDAY;
+    private javax.swing.JLabel CANDIDATES_DETAILS_CATEGORY;
+    private javax.swing.JLabel CANDIDATES_DETAILS_IMAGE;
+    private javax.swing.JLabel CANDIDATES_DETAILS_NAME;
+    private javax.swing.JPanel CANDIDATE_DETAILS;
+    private javax.swing.JPanel CANDITATES;
+    private javax.swing.JTable LIST_OF_CANDIDATES;
+    private javax.swing.JPanel MAIN_PANEL;
+    private javax.swing.JPanel PAGES;
+    private javax.swing.JPanel TABULATION;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
+
+    private void RETRIEVE_CANDIDATE() {
+        try {
+            String query = "SELECT id, name FROM candidate";
+            pst = conn.prepareStatement(query);
+            rs = pst.executeQuery();
+
+            DefaultTableModel tableModel = (DefaultTableModel) LIST_OF_CANDIDATES.getModel();
+            tableModel.setRowCount(0); // Clear existing rows
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+
+                Object[] row = {name};
+                tableModel.addRow(row);
+            }
+
+            // Refresh the table to update its content
+            tableModel.fireTableDataChanged();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
 }
