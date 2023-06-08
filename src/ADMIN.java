@@ -19,10 +19,15 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -77,7 +82,11 @@ public class ADMIN extends javax.swing.JFrame {
         DISPLAY_CRITERIA();
         DISPLAY_USED_CRITERIA();
         RETRIEVE_CANDIDATE_FORTABULATION();
+        TABULATION_FETCH_BASED_ON_CRITERIA();
 
+//        OVERALL_WINNER();
+
+//        CRITERIA_WINNER();
         CANDIDATE_SELECTED_GENDER.setVisible(false);
 
         cardLayout = (CardLayout) (PAGES.getLayout());
@@ -127,6 +136,7 @@ public class ADMIN extends javax.swing.JFrame {
                 JTable table = (JTable) evt.getSource();
                 int row = table.getSelectedRow();
                 int id = Integer.parseInt(table.getValueAt(row, 0).toString());
+                TABULATION_CANDIDATE_ID.setText(String.valueOf(id));
 
                 try {
 
@@ -148,10 +158,9 @@ public class ADMIN extends javax.swing.JFrame {
                     tableModel.addColumn("Judge Name");
 
                     Map<String, Double> criterionTotalScores = new HashMap<>();
-                    Map<String, Double> judgeScores = new HashMap<>(); // Store the sum of scores for each judge
+                    Map<String, Double> judgeScores = new HashMap<>();
 
                     double overallTotalScore = 0.0;
-                    int overallTotalOutOf = 0;
                     int judgeCount = 0;
 
                     while (rs.next()) {
@@ -179,7 +188,7 @@ public class ADMIN extends javax.swing.JFrame {
                             judgeScores.put(judgeName, currentJudgeScore);
                         } else {
                             judgeScores.put(judgeName, judgeScorePercentage);
-                            judgeCount++; // Increment the judge count
+                            judgeCount++;
                         }
 
                         tableModel.addRow(new Object[]{criteriaTitle, candidateName, outOf, judgeScore, judgeName});
@@ -187,28 +196,29 @@ public class ADMIN extends javax.swing.JFrame {
 
                     TABULATION_TABLE.setModel(tableModel);
 
-// Set the layout manager of TABULATION_SCORES_CONTAINER to BoxLayout with vertical orientation
+                    // Set the layout manager of TABULATION_SCORES
                     TABULATION_SCORES_CONTAINER.setLayout(new BoxLayout(TABULATION_SCORES_CONTAINER, BoxLayout.Y_AXIS));
+
+                    TABULATION_SCORES_CONTAINER.removeAll();
+
+                    DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
                     for (Map.Entry<String, Double> entry : criterionTotalScores.entrySet()) {
                         String criteriaTitle = entry.getKey();
-                        double totalScore = entry.getValue() / judgeCount; // Calculate the average score based on the number of judges
+                        double totalScore = entry.getValue() / judgeCount;
 
                         overallTotalScore += totalScore;
 
-                        // Create a label to display the criterion and its total score
                         JLabel criterionLabel = new JLabel(criteriaTitle);
-                        JLabel scoreLabel = new JLabel(String.valueOf(totalScore));
+                        JLabel scoreLabel = new JLabel(decimalFormat.format(totalScore));
 
-                        // Add some vertical spacing between the labels
                         TABULATION_SCORES_CONTAINER.add(Box.createVerticalStrut(10));
 
-                        // Add the labels to the scores panel
                         TABULATION_SCORES_CONTAINER.add(criterionLabel);
                         TABULATION_SCORES_CONTAINER.add(scoreLabel);
                     }
 
-                    TABULATION_TOTAL_SCORES.setText(String.valueOf(overallTotalScore / judgeCount)); // Calculate the average overall score
+                    TABULATION_TOTAL_SCORES.setText(String.valueOf(decimalFormat.format(overallTotalScore / judgeCount))); // Calculate the average overall score
                     TABULATION_OUT_OF.setText(String.valueOf(100));
 
                     TABULATION_SCORES_CONTAINER.revalidate();
@@ -217,6 +227,20 @@ public class ADMIN extends javax.swing.JFrame {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, e);
                 }
+            }
+        });
+
+        CANDIDATE_CATEGORY_DROPDOWN_WINNERS.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Object selectedCategory = CANDIDATE_CATEGORY_DROPDOWN_WINNERS.getSelectedItem();
+                OVERALL_WINNER_BYCATEGORY();
+                CRITERIA_WINNER();
+
+//                if (selectedCategory.equals("All")) {
+//                    OVERALL_WINNER();
+//                } else {
+////                    OVERALL_WINNER_BYCATEGORY();
+//                }
             }
         });
     }
@@ -240,6 +264,7 @@ public class ADMIN extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
+        jButton13 = new javax.swing.JButton();
         PAGES = new javax.swing.JPanel();
         MAIN_PANEL = new javax.swing.JPanel();
         JUDGES = new javax.swing.JPanel();
@@ -306,6 +331,10 @@ public class ADMIN extends javax.swing.JFrame {
         TABULATION_TOTAL_SCORES = new javax.swing.JLabel();
         TABULATION_OUT_OF = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
+        TABULATION_CRITERIA_TITLE_DROPDOWN = new javax.swing.JComboBox<>();
+        TABULATION_CANDIDATE_ID = new javax.swing.JLabel();
+        WINNERS = new javax.swing.JPanel();
+        CANDIDATE_CATEGORY_DROPDOWN_WINNERS = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -354,6 +383,14 @@ public class ADMIN extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 640, -1, -1));
+
+        jButton13.setText("WINNERS");
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton13, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 390, 200, 41));
 
         jSplitPane1.setLeftComponent(jPanel1);
 
@@ -716,7 +753,21 @@ public class ADMIN extends javax.swing.JFrame {
 
         TABULATION.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 490, 280, 200));
 
+        TABULATION_CRITERIA_TITLE_DROPDOWN.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Criteria (All)" }));
+        TABULATION.add(TABULATION_CRITERIA_TITLE_DROPDOWN, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 22, 280, 30));
+
+        TABULATION_CANDIDATE_ID.setText("candidate_id");
+        TABULATION.add(TABULATION_CANDIDATE_ID, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 30, 80, -1));
+
         PAGES.add(TABULATION, "TABULATION");
+
+        WINNERS.setBackground(new java.awt.Color(0, 102, 102));
+        WINNERS.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        CANDIDATE_CATEGORY_DROPDOWN_WINNERS.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Teenager(Male)", "Teenager(Female)", "Kids(Male)", "Kids(Female)" }));
+        WINNERS.add(CANDIDATE_CATEGORY_DROPDOWN_WINNERS, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 40, 140, 30));
+
+        PAGES.add(WINNERS, "WINNERS");
 
         jSplitPane1.setRightComponent(PAGES);
 
@@ -901,6 +952,10 @@ public class ADMIN extends javax.swing.JFrame {
         setVisible(false);
     }//GEN-LAST:event_jButton12ActionPerformed
 
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        cardLayout.show(PAGES, "WINNERS");
+    }//GEN-LAST:event_jButton13ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -950,6 +1005,7 @@ public class ADMIN extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser CANDIDATE_BDATE;
     private javax.swing.JComboBox<String> CANDIDATE_CATEGORY_DROPDOWN;
     private javax.swing.JComboBox<String> CANDIDATE_CATEGORY_DROPDOWN_TABULATION;
+    private javax.swing.JComboBox<String> CANDIDATE_CATEGORY_DROPDOWN_WINNERS;
     private javax.swing.JRadioButton CANDIDATE_FEMALE;
     private javax.swing.JLabel CANDIDATE_IMAGE_LABEL;
     private javax.swing.JRadioButton CANDIDATE_MALE;
@@ -972,16 +1028,20 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JPanel MAIN_PANEL;
     private javax.swing.JPanel PAGES;
     private javax.swing.JPanel TABULATION;
+    private javax.swing.JLabel TABULATION_CANDIDATE_ID;
+    private javax.swing.JComboBox<String> TABULATION_CRITERIA_TITLE_DROPDOWN;
     private javax.swing.JTable TABULATION_LIST_OF_CANDIDATES;
     private javax.swing.JLabel TABULATION_OUT_OF;
     private javax.swing.JPanel TABULATION_SCORES_CONTAINER;
     private javax.swing.JTable TABULATION_TABLE;
     private javax.swing.JLabel TABULATION_TOTAL_SCORES;
     private javax.swing.JButton UPLOAD_BUTTON;
+    private javax.swing.JPanel WINNERS;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -1252,11 +1312,12 @@ public class ADMIN extends javax.swing.JFrame {
     private void ADD_CRITERIA() {
         try {
 
-            String sql = "INSERT INTO criteria (title, outof) VALUES (?, ?)";
+            String sql = "INSERT INTO criteria (title, outof, isUsed) VALUES (?, ?, ?)";
 
             pst = conn.prepareStatement(sql);
             pst.setString(1, CRITERIA_TITLE.getText());
             pst.setInt(2, Integer.parseInt(CRITERIA_OUTOF.getText()));
+            pst.setBoolean(3, false);
 
             pst.execute();
 
@@ -1399,7 +1460,6 @@ public class ADMIN extends javax.swing.JFrame {
 
             while (rs.next()) {
                 int id = rs.getInt("id");
-
                 String name = rs.getString("name");
                 String candidate_no = rs.getString("candidate_no");
 
@@ -1409,6 +1469,247 @@ public class ADMIN extends javax.swing.JFrame {
             TABULATION_LIST_OF_CANDIDATES.setModel(tableModel);
 
             tableModel.fireTableDataChanged();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void TABULATION_FETCH_BASED_ON_CRITERIA() {
+
+        try {
+
+            String sql = "SELECT DISTINCT title FROM criteria";
+            pst = conn.prepareStatement(sql);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String criteria_title = rs.getString("title");
+                TABULATION_CRITERIA_TITLE_DROPDOWN.addItem(criteria_title);
+            }
+
+            TABULATION_CRITERIA_TITLE_DROPDOWN.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String selectedCriteria = (String) TABULATION_CRITERIA_TITLE_DROPDOWN.getSelectedItem();
+                    // Clear the table
+                    DefaultTableModel tableModel = (DefaultTableModel) TABULATION_TABLE.getModel();
+                    tableModel.setRowCount(0);
+
+                    try {
+                        String query;
+                        if (selectedCriteria.contains("(All)")) {
+                            query = "SELECT s.criteria_title, c.name AS candidate_name, s.outOf, s.judge_score, s.judge_id, j.fullname AS judge_name "
+                                    + "FROM scores s "
+                                    + "JOIN candidate c ON s.candidate_id = c.id "
+                                    + "JOIN judge j ON s.judge_id = j.judge_id "
+                                    + "WHERE s.candidate_id = ?";
+
+                        } else {
+                            query = "SELECT s.criteria_title, c.name AS candidate_name, s.outOf, s.judge_score, s.judge_id, j.fullname AS judge_name "
+                                    + "FROM scores s "
+                                    + "JOIN candidate c ON s.candidate_id = c.id "
+                                    + "JOIN judge j ON s.judge_id = j.judge_id "
+                                    + "WHERE s.criteria_title = ? AND s.candidate_id = ?";
+                        }
+
+                        pst = conn.prepareStatement(query);
+
+                        if (!selectedCriteria.contains("(All)")) {
+                            pst.setString(1, selectedCriteria);
+                            pst.setInt(2, Integer.parseInt(TABULATION_CANDIDATE_ID.getText()));
+                        } else {
+                            pst.setInt(1, Integer.parseInt(TABULATION_CANDIDATE_ID.getText()));
+
+                        }
+                        rs = pst.executeQuery();
+
+                        while (rs.next()) {
+                            String criteriaTitle = rs.getString("criteria_title");
+                            String candidateName = rs.getString("candidate_name");
+                            int outOf = rs.getInt("outOf");
+                            double judgeScore = rs.getDouble("judge_score");
+                            String judgeName = rs.getString("judge_name");
+
+                            // Add the row to the table
+                            tableModel.addRow(new Object[]{criteriaTitle, candidateName, outOf, judgeScore, judgeName});
+                        }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, ex);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+
+        }
+    }
+
+    private void OVERALL_WINNER_BYCATEGORY() {
+        try {
+            String selectedCategory = (String) CANDIDATE_CATEGORY_DROPDOWN_WINNERS.getSelectedItem();
+
+            String query = "SELECT s.criteria_title, c.name AS candidate_name, s.outOf, s.judge_score, s.judge_id, j.fullname AS judge_name "
+                    + "FROM scores s "
+                    + "JOIN candidate c ON s.candidate_id = c.id "
+                    + "JOIN judge j ON s.judge_id = j.judge_id "
+                    + "WHERE c.category = ? AND c.gender = ?";
+            pst = conn.prepareStatement(query);
+            if (selectedCategory.contains("Teenager") && selectedCategory.contains("Male")) {
+                pst.setString(1, "Teenager");
+                pst.setString(2, "Male");
+            } else if (selectedCategory.contains("Teenager") && selectedCategory.contains("Female")) {
+                pst.setString(1, "Teenager");
+                pst.setString(2, "Female");
+            } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Male")) {
+                pst.setString(1, "Kids");
+                pst.setString(2, "Male");
+            } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Female")) {
+                pst.setString(1, "Kids");
+                pst.setString(2, "Female");
+            } else {
+                System.out.println("Invalid selected category: " + selectedCategory);
+                return;
+            }
+            rs = pst.executeQuery();
+
+            Map<String, Double> candidateTotalScores = new HashMap<>();
+            double overallTotalScore = 0.0;
+            int judgeCount = 0;
+            String winner = null;
+
+            while (rs.next()) {
+                String candidateName = rs.getString("candidate_name");
+                double judgeScore = rs.getDouble("judge_score");
+
+                // Update the total score for the current candidate
+                if (candidateTotalScores.containsKey(candidateName)) {
+                    double currentTotalScore = candidateTotalScores.get(candidateName);
+                    currentTotalScore += judgeScore;
+                    candidateTotalScores.put(candidateName, currentTotalScore);
+                } else {
+                    candidateTotalScores.put(candidateName, judgeScore);
+                }
+
+                judgeCount++;
+            }
+
+            // Calculate the average score for each candidate
+            for (Map.Entry<String, Double> entry : candidateTotalScores.entrySet()) {
+                String candidateName = entry.getKey();
+                double totalScore = entry.getValue() / judgeCount;
+                candidateTotalScores.put(candidateName, totalScore);
+            }
+
+            // Find the winner with the highest total score
+            double highestTotalScore = -1.0;
+
+            for (Map.Entry<String, Double> entry : candidateTotalScores.entrySet()) {
+                String candidateName = entry.getKey();
+                double totalScore = entry.getValue();
+
+                if (totalScore > highestTotalScore) {
+                    highestTotalScore = totalScore;
+                    winner = candidateName;
+                }
+            }
+
+            overallTotalScore = highestTotalScore * candidateTotalScores.size();
+
+            System.out.println("The winner is: " + winner);
+            System.out.println("Total score: " + overallTotalScore);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void CRITERIA_WINNER() {
+        try {
+            String selectedCategory = (String) CANDIDATE_CATEGORY_DROPDOWN_WINNERS.getSelectedItem();
+
+            String query = "SELECT s.criteria_title, c.name AS candidate_name, c.category, s.outOf, s.judge_score, s.judge_id, j.fullname AS judge_name "
+                    + "FROM scores s "
+                    + "JOIN candidate c ON s.candidate_id = c.id "
+                    + "JOIN judge j ON s.judge_id = j.judge_id ";
+
+            if (!selectedCategory.equals("All")) {
+                query += "WHERE c.category = ? AND c.gender = ?";
+                pst = conn.prepareStatement(query);
+
+                if (selectedCategory.contains("Teenager") && selectedCategory.contains("Male")) {
+                    pst.setString(1, "Teenager");
+                    pst.setString(2, "Male");
+                } else if (selectedCategory.contains("Teenager") && selectedCategory.contains("Female")) {
+                    pst.setString(1, "Teenager");
+                    pst.setString(2, "Female");
+                } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Male")) {
+                    pst.setString(1, "Kids");
+                    pst.setString(2, "Male");
+                } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Female")) {
+                    pst.setString(1, "Kids");
+                    pst.setString(2, "Female");
+                } else {
+                    System.out.println("Invalid selected category: " + selectedCategory);
+                    return;
+                }
+            } else {
+                pst = conn.prepareStatement(query);
+            }
+
+            rs = pst.executeQuery();
+
+            Map<String, Map<String, Double>> criterionScores = new HashMap<>();
+            Map<String, String> criterionWinners = new HashMap<>();
+
+            while (rs.next()) {
+                String criteriaTitle = rs.getString("criteria_title");
+                String candidateName = rs.getString("candidate_name");
+                String category = rs.getString("category");
+                double judgeScore = rs.getDouble("judge_score");
+
+                // Retrieve the scores for the current criterion
+                Map<String, Double> scores = criterionScores.getOrDefault(criteriaTitle, new HashMap<>());
+
+                // Update the score for the current candidate
+                double currentScore = scores.getOrDefault(candidateName, 0.0);
+                currentScore += judgeScore;
+                scores.put(candidateName, currentScore);
+
+                // Update the scores map for the current criterion
+                criterionScores.put(criteriaTitle, scores);
+
+                // Store the category of the winner instead of the candidateName
+                criterionWinners.put(criteriaTitle, category);
+            }
+
+            // Determine the winner for each criterion
+            for (Map.Entry<String, Map<String, Double>> entry : criterionScores.entrySet()) {
+                String criteriaTitle = entry.getKey();
+                Map<String, Double> scores = entry.getValue();
+
+                // Find the candidate with the highest score
+                String winner = "";
+                double highestScore = -1.0;
+
+                for (Map.Entry<String, Double> scoreEntry : scores.entrySet()) {
+                    String candidateName = scoreEntry.getKey();
+                    double score = scoreEntry.getValue();
+
+                    if (score > highestScore) {
+                        highestScore = score;
+                        winner = candidateName;
+                    }
+                }
+
+                criterionWinners.put(criteriaTitle, winner);
+            }
+
+            // Print the winners for each criterion
+            for (Map.Entry<String, String> entry : criterionWinners.entrySet()) {
+                String criteriaTitle = entry.getKey();
+                String winner = entry.getValue();
+                System.out.println("Winner for \"" + criteriaTitle + "\" " + winner);
+            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
