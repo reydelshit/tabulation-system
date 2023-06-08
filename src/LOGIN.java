@@ -1,8 +1,13 @@
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Reydel
@@ -12,7 +17,12 @@ public class LOGIN extends javax.swing.JFrame {
     /**
      * Creates new form LOGIN
      */
+    Connection conn = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
     public LOGIN() {
+        conn = DBConnection.getConnection();
         initComponents();
     }
 
@@ -25,21 +35,44 @@ public class LOGIN extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel1 = new javax.swing.JPanel();
+        LOGIN_USERNAME = new javax.swing.JTextField();
+        LOGIN_PASSWORD = new javax.swing.JPasswordField();
+        jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(LOGIN_USERNAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 130, 202, 40));
+        jPanel1.add(LOGIN_PASSWORD, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 200, 40));
+
+        jButton1.setText("LOGIN");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 280, 130, 30));
+
+        jLabel1.setText("Password");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 190, 70, -1));
+
+        jLabel2.setText("Username");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 110, 70, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 510, 490));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        LOGIN_FUNCTION();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -77,5 +110,61 @@ public class LOGIN extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPasswordField LOGIN_PASSWORD;
+    private javax.swing.JTextField LOGIN_USERNAME;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+    private void LOGIN_FUNCTION() {
+
+        try {
+
+            String username = LOGIN_USERNAME.getText();
+            String password = LOGIN_PASSWORD.getText();
+
+            java.sql.Statement Stm;
+
+            Stm = conn.createStatement();
+            java.sql.ResultSet rs;
+            rs = Stm.executeQuery("SELECT * FROM judge WHERE BINARY username = '" + username + "' AND BINARY password = '" + password + "'");
+
+            if (rs.next()) {
+                int id = rs.getInt("judge_id");
+                String name = rs.getString("username");
+                String accountType = rs.getString("account_type");
+
+                switch (accountType) {
+                    case "Admin":
+                        ADMIN s = new ADMIN();
+
+                        s.setVisible(true);
+                        setVisible(false);
+                        break;
+                    case "Judge":
+                        JUDGE n = new JUDGE();
+                        n.setId(id);
+                        n.setName(name);
+                        n.setVisible(true);
+                        dispose();
+
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(null, "Invalid User");
+
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid Credentials");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, "Error");
+
+        }
+
+    }
+
 }

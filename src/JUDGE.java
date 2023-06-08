@@ -2,16 +2,23 @@
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -30,17 +37,90 @@ public class JUDGE extends javax.swing.JFrame {
     Connection conn = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
-    CardLayout cardLayout;
+
+    private final CANDIDATES_DETAILS candidatesDetails;
+
+//    private final int id;
+//    private final String name;
+    private int id;
+    private String name;
+
+    // ...
+    public void setId(int id) {
+        this.id = id;
+        JUDGE_ID_WELCOME.setText(String.valueOf(id));
+
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        JUDGE_NAME_WELCOME.setText(name);
+
+    }
 
     public JUDGE() {
+
         conn = DBConnection.getConnection();
+
         initComponents();
 
         RETRIEVE_CANDIDATE();
+        DISPLAY_USED_CRITERIA();
+        RETRIEVE_CANDIDATE_FOR_JUDGE();
 
-        cardLayout = (CardLayout) (PAGES.getLayout());
+        candidatesDetails = new CANDIDATES_DETAILS();
+        candidatesDetails.setVisible(false);
 
-        CANDIDATE_DETAILS.setVisible(false);
+        CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Object selectedBatch = CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE.getSelectedItem();
+                if (selectedBatch.equals("All")) {
+                    RETRIEVE_CANDIDATE();
+                } else {
+                    RETRIEVE_CANDIDATE_FOR_JUDGE();
+
+                }
+            }
+        });
+
+        JUDGE_USED_CRITERIA.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                JTable table = (JTable) evt.getSource();
+                int row = table.getSelectedRow();
+
+                String title = table.getValueAt(row, 0).toString();
+                int outOf = Integer.parseInt(table.getValueAt(row, 1).toString());
+
+                CRITERIA_TITLE_LABEL.setText(title);
+                CRITERIA_OUT_OF.setText(Integer.toString(outOf));
+
+            }
+        });
+
+        LIST_OF_CANDIDATES_FOR_JUDGE.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+
+                JTable table = (JTable) evt.getSource();
+                int rowSelected = table.getSelectedRow();
+                int columnSelected = table.getSelectedColumn();
+
+                if (columnSelected <= 4) {
+                    String title = table.getValueAt(rowSelected, 1).toString();
+                    CRITERIA_NAME.setText(title);
+                }
+
+                int column = LIST_OF_CANDIDATES_FOR_JUDGE.getColumnModel().getColumnIndexAtX(evt.getX());
+                int row = evt.getY() / LIST_OF_CANDIDATES_FOR_JUDGE.getRowHeight();
+
+                if (row < LIST_OF_CANDIDATES_FOR_JUDGE.getRowCount() && column == 5) {
+                    int id = (int) LIST_OF_CANDIDATES_FOR_JUDGE.getValueAt(row, 0);
+                    candidatesDetails.RETRIEVE_CANDIDATE(id);
+                    candidatesDetails.setVisible(true);
+                }
+            }
+        });
     }
 
     /**
@@ -52,186 +132,131 @@ public class JUDGE extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jButton7 = new javax.swing.JButton();
-        PAGES = new javax.swing.JPanel();
-        MAIN_PANEL = new javax.swing.JPanel();
-        CANDITATES = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        CANDIDATE_DETAILS = new javax.swing.JPanel();
-        CANDIDATES_DETAILS_NAME = new javax.swing.JLabel();
-        CANDIDATES_DETAILS_AGE = new javax.swing.JLabel();
-        CANDIDATES_DETAILS_BIRTHDAY = new javax.swing.JLabel();
-        CANDIDATES_DETAILS_CATEGORY = new javax.swing.JLabel();
-        CANDIDATES_DETAILS_IMAGE = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        LIST_OF_CANDIDATES = new javax.swing.JTable();
         TABULATION = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        JUDGE_USED_CRITERIA = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        CRITERIA_OUT_OF = new javax.swing.JLabel();
+        CRITERIA_TITLE_LABEL = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        CRITERIA_NAME = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        LIST_OF_CANDIDATES_FOR_JUDGE = new javax.swing.JTable();
+        CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE = new javax.swing.JComboBox<>();
+        JUDGE_NAME_WELCOME = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        JUDGE_ID_WELCOME = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(255, 204, 204));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        TABULATION.setBackground(new java.awt.Color(255, 153, 153));
+        TABULATION.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton2.setText("CANDIDATES");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+        JUDGE_USED_CRITERIA.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
             }
-        });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 200, 41));
+        ));
+        jScrollPane2.setViewportView(JUDGE_USED_CRITERIA);
 
-        jLabel1.setText("DASDADA");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 590, 40, -1));
+        TABULATION.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 40, 680, 230));
 
-        jButton7.setText("GRADE");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+        jPanel3.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 380, 130, 40));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setText("OUT OF");
+        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 80, 30));
+
+        CRITERIA_OUT_OF.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        CRITERIA_OUT_OF.setText("number diria");
+        jPanel3.add(CRITERIA_OUT_OF, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 300, 100, 30));
+
+        CRITERIA_TITLE_LABEL.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        CRITERIA_TITLE_LABEL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CRITERIA_TITLE_LABEL.setText("CRITERIA diria");
+        jPanel3.add(CRITERIA_TITLE_LABEL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 380, 50));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setText("CRITERIA");
+        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 80, 30));
+
+        jButton3.setText("SUBMIT");
+        jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 500, 90, 40));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setText("CRITERIA");
+        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 80, 30));
+
+        CRITERIA_NAME.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        CRITERIA_NAME.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CRITERIA_NAME.setText("name diria");
+        jPanel3.add(CRITERIA_NAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 380, 50));
+
+        TABULATION.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 100, 420, 570));
+
+        LIST_OF_CANDIDATES_FOR_JUDGE.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
             }
-        });
-        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 200, 41));
+        ));
+        jScrollPane3.setViewportView(LIST_OF_CANDIDATES_FOR_JUDGE);
 
-        jSplitPane1.setLeftComponent(jPanel1);
+        TABULATION.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 340, 680, 330));
 
-        PAGES.setBackground(new java.awt.Color(204, 255, 204));
-        PAGES.setLayout(new java.awt.CardLayout());
+        CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Teenager(Male)", "Teenager(Female)", "Kids(Male)", "Kids(Female)" }));
+        TABULATION.add(CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 300, 140, 30));
 
-        MAIN_PANEL.setBackground(new java.awt.Color(255, 153, 255));
+        JUDGE_NAME_WELCOME.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        JUDGE_NAME_WELCOME.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        JUDGE_NAME_WELCOME.setText("Welcome ,");
+        TABULATION.add(JUDGE_NAME_WELCOME, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 20, 140, 50));
 
-        javax.swing.GroupLayout MAIN_PANELLayout = new javax.swing.GroupLayout(MAIN_PANEL);
-        MAIN_PANEL.setLayout(MAIN_PANELLayout);
-        MAIN_PANELLayout.setHorizontalGroup(
-            MAIN_PANELLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        MAIN_PANELLayout.setVerticalGroup(
-            MAIN_PANELLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Welcome ,");
+        TABULATION.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 20, 140, 50));
 
-        PAGES.add(MAIN_PANEL, "card4");
+        JUDGE_ID_WELCOME.setText("jLabel1");
+        TABULATION.add(JUDGE_ID_WELCOME, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 30, 80, 40));
 
-        CANDITATES.setBackground(new java.awt.Color(102, 102, 0));
-        CANDITATES.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("LIST OF CANDIDATES");
-        CANDITATES.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 190, 40));
-
-        CANDIDATE_DETAILS.setBackground(new java.awt.Color(204, 204, 255));
-        CANDIDATE_DETAILS.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        CANDIDATES_DETAILS_NAME.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        CANDIDATES_DETAILS_NAME.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        CANDIDATES_DETAILS_NAME.setText("name");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_NAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 290, 240, 42));
-
-        CANDIDATES_DETAILS_AGE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        CANDIDATES_DETAILS_AGE.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        CANDIDATES_DETAILS_AGE.setText("age");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_AGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 340, 240, 42));
-
-        CANDIDATES_DETAILS_BIRTHDAY.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        CANDIDATES_DETAILS_BIRTHDAY.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        CANDIDATES_DETAILS_BIRTHDAY.setText("birthday");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_BIRTHDAY, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 400, 240, 42));
-
-        CANDIDATES_DETAILS_CATEGORY.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        CANDIDATES_DETAILS_CATEGORY.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        CANDIDATES_DETAILS_CATEGORY.setText("category");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_CATEGORY, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 460, 240, 42));
-
-        CANDIDATES_DETAILS_IMAGE.setText("jLabel1");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_IMAGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 20, 350, 250));
-
-        jButton1.setText("close");
+        jButton1.setText("Logout");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        CANDIDATE_DETAILS.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 600, -1, -1));
+        TABULATION.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 660, -1, -1));
 
-        CANDITATES.add(CANDIDATE_DETAILS, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 30, -1, -1));
-
-        LIST_OF_CANDIDATES.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null}
-            },
-            new String [] {
-                "Candidates"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(LIST_OF_CANDIDATES);
-        if (LIST_OF_CANDIDATES.getColumnModel().getColumnCount() > 0) {
-            LIST_OF_CANDIDATES.getColumnModel().getColumn(0).setResizable(false);
-        }
-
-        CANDITATES.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 240, 560));
-
-        PAGES.add(CANDITATES, "PAGE_1");
-
-        TABULATION.setBackground(new java.awt.Color(255, 153, 153));
-
-        javax.swing.GroupLayout TABULATIONLayout = new javax.swing.GroupLayout(TABULATION);
-        TABULATION.setLayout(TABULATIONLayout);
-        TABULATIONLayout.setHorizontalGroup(
-            TABULATIONLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1076, Short.MAX_VALUE)
-        );
-        TABULATIONLayout.setVerticalGroup(
-            TABULATIONLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 699, Short.MAX_VALUE)
-        );
-
-        PAGES.add(TABULATION, "GRADE");
-
-        jSplitPane1.setRightComponent(PAGES);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 699, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        getContentPane().add(TABULATION, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1320, 699));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        cardLayout.show(PAGES, "PAGE_1");
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        cardLayout.show(PAGES, "GRADE");
-    }//GEN-LAST:event_jButton7ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        LOGIN s = new LOGIN();
+
+        s.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -246,7 +271,7 @@ public class JUDGE extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -271,43 +296,150 @@ public class JUDGE extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel CANDIDATES_DETAILS_AGE;
-    private javax.swing.JLabel CANDIDATES_DETAILS_BIRTHDAY;
-    private javax.swing.JLabel CANDIDATES_DETAILS_CATEGORY;
-    private javax.swing.JLabel CANDIDATES_DETAILS_IMAGE;
-    private javax.swing.JLabel CANDIDATES_DETAILS_NAME;
-    private javax.swing.JPanel CANDIDATE_DETAILS;
-    private javax.swing.JPanel CANDITATES;
-    private javax.swing.JTable LIST_OF_CANDIDATES;
-    private javax.swing.JPanel MAIN_PANEL;
-    private javax.swing.JPanel PAGES;
+    private javax.swing.JComboBox<String> CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE;
+    private javax.swing.JLabel CRITERIA_NAME;
+    private javax.swing.JLabel CRITERIA_OUT_OF;
+    private javax.swing.JLabel CRITERIA_TITLE_LABEL;
+    private javax.swing.JLabel JUDGE_ID_WELCOME;
+    private javax.swing.JLabel JUDGE_NAME_WELCOME;
+    private javax.swing.JTable JUDGE_USED_CRITERIA;
+    private javax.swing.JTable LIST_OF_CANDIDATES_FOR_JUDGE;
     private javax.swing.JPanel TABULATION;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
-    private void RETRIEVE_CANDIDATE() {
+    private void DISPLAY_USED_CRITERIA() {
         try {
-            String query = "SELECT id, name FROM candidate";
+            String query = "SELECT title, outof FROM criteria WHERE isUsed = true";
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
 
-            DefaultTableModel tableModel = (DefaultTableModel) LIST_OF_CANDIDATES.getModel();
-            tableModel.setRowCount(0); // Clear existing rows
+            DefaultTableModel tableModel = new DefaultTableModel();
+
+            tableModel.addColumn("Title");
+            tableModel.addColumn("Out of");
+
+            // Populate the table model with data from the result set
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String outof = rs.getString("outof");
+
+                // Add a row to the table model
+                tableModel.addRow(new Object[]{title, outof});
+            }
+
+            // Set the table model for the existing JTable component
+            JUDGE_USED_CRITERIA.setModel(tableModel);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void RETRIEVE_CANDIDATE() {
+        try {
+            DefaultTableModel tableModel = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            // Clear the existing data in the table
+            tableModel.setRowCount(0);
+
+            String query = "SELECT id, name, gender, candidate_no, category FROM candidate";
+            pst = conn.prepareStatement(query);
+            rs = pst.executeQuery();
+
+            // Define column names for the table
+            String[] columnNames = {"id", "Name", "Gender", "Candidate No.", "Category", "Action"};
+
+            tableModel.setColumnIdentifiers(columnNames);
 
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
+                String gender = rs.getString("gender");
+                int candidate_no = rs.getInt("candidate_no");
+                String category = rs.getString("category");
+                String pressMe = "View Details";
 
-                Object[] row = {name};
-                tableModel.addRow(row);
+                tableModel.addRow(new Object[]{id, name, gender, candidate_no, category, pressMe});
             }
+
+            LIST_OF_CANDIDATES_FOR_JUDGE.setCellSelectionEnabled(false);
+            LIST_OF_CANDIDATES_FOR_JUDGE.setModel(tableModel);
+            tableModel.fireTableDataChanged();
+            // Refresh the table to update its content
+            tableModel.fireTableDataChanged();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void RETRIEVE_CANDIDATE_FOR_JUDGE() {
+        try {
+            DefaultTableModel tableModel = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            // Clear the existing data in the table
+            tableModel.setRowCount(0);
+
+            String selectedCategory = (String) CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE.getSelectedItem();
+
+            String query = "SELECT id, name, gender, candidate_no, category FROM candidate WHERE category = ? AND gender = ?";
+            pst = conn.prepareStatement(query);
+            if (selectedCategory.contains("Teenager") && selectedCategory.contains("Male")) {
+                pst.setString(1, "Teenager");
+                pst.setString(2, "Male");
+            } else if (selectedCategory.contains("Teenager") && selectedCategory.contains("Female")) {
+                pst.setString(1, "Teenager");
+                pst.setString(2, "Female");
+            } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Male")) {
+                pst.setString(1, "Kids");
+                pst.setString(2, "Male");
+            } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Female")) {
+                pst.setString(1, "Kids");
+                pst.setString(2, "Female");
+            } else {
+                System.out.println("Invalid selected category: " + selectedCategory);
+                return;
+            }
+
+            rs = pst.executeQuery();
+
+            // Define column names for the table
+            String[] columnNames = {"id", "Name", "Gender", "Candidate No.", "Category", "Action"};
+
+            tableModel.setColumnIdentifiers(columnNames);
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String gender = rs.getString("gender");
+                int candidate_no = rs.getInt("candidate_no");
+                String category = rs.getString("category");
+                String pressMe = "View Details";
+
+                tableModel.addRow(new Object[]{id, name, gender, candidate_no, category, pressMe});
+            }
+
+            LIST_OF_CANDIDATES_FOR_JUDGE.setCellSelectionEnabled(false);
+            LIST_OF_CANDIDATES_FOR_JUDGE.setModel(tableModel);
 
             // Refresh the table to update its content
             tableModel.fireTableDataChanged();

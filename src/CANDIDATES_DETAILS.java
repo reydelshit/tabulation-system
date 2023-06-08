@@ -56,7 +56,7 @@ public class CANDIDATES_DETAILS extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        CANDIDATE_DETAILS.setBackground(new java.awt.Color(204, 204, 255));
+        CANDIDATE_DETAILS.setBackground(new java.awt.Color(153, 255, 204));
         CANDIDATE_DETAILS.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         CANDIDATES_DETAILS_NAME.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N

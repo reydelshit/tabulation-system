@@ -42,10 +42,10 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author Reydel
  */
-public class DASHBOARD extends javax.swing.JFrame {
+public class ADMIN extends javax.swing.JFrame {
 
     /**
-     * Creates new form DASHBOARD
+     * Creates new form ADMIN
      */
     Connection conn = null;
     PreparedStatement pst = null;
@@ -54,7 +54,7 @@ public class DASHBOARD extends javax.swing.JFrame {
 
     private final CANDIDATES_DETAILS candidatesDetails;
 
-    public DASHBOARD() {
+    public ADMIN() {
         conn = DBConnection.getConnection();
         initComponents();
 
@@ -69,6 +69,7 @@ public class DASHBOARD extends javax.swing.JFrame {
         DISPLAY_ACCOUNT_JUDGE();
         DISPLAY_ACCOUNT_JUDGE();
         DISPLAY_CRITERIA();
+        DISPLAY_USED_CRITERIA();
 
         CANDIDATE_SELECTED_GENDER.setVisible(false);
 
@@ -100,6 +101,33 @@ public class DASHBOARD extends javax.swing.JFrame {
                 }
             }
         });
+
+//        CRITERIA_TABLE.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent evt) {
+//                JTable table = (JTable) evt.getSource();
+//                int row = table.getSelectedRow();
+//
+//                int id = Integer.parseInt(table.getValueAt(row, 0).toString());
+//
+//                try {
+//
+//                    String query = "UPDATE criteria SET isUsed = ? WHERE criteria_id = ?";
+//                    pst = conn.prepareStatement(query);
+//                    pst.setBoolean(1, true);
+//                    pst.setInt(2, id);
+//
+//                    pst.executeUpdate();
+//
+//                    DISPLAY_CRITERIA();
+//                    DISPLAY_USED_CRITERIA();
+//
+//                } catch (Exception e) {
+//                    JOptionPane.showMessageDialog(null, e);
+//                }
+//
+//            }
+//        });
     }
 
     private byte[] selectedImageData;
@@ -120,6 +148,7 @@ public class DASHBOARD extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
         PAGES = new javax.swing.JPanel();
         MAIN_PANEL = new javax.swing.JPanel();
         JUDGES = new javax.swing.JPanel();
@@ -167,6 +196,13 @@ public class DASHBOARD extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         CRITERIA_TABLE = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        CRITERIA_USED = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        jButton8 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
+        jButton10 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
         TABULATION = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -208,6 +244,14 @@ public class DASHBOARD extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 330, 200, 41));
+
+        jButton12.setText("Logout");
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 640, -1, -1));
 
         jSplitPane1.setLeftComponent(jPanel1);
 
@@ -423,14 +467,14 @@ public class DASHBOARD extends javax.swing.JFrame {
 
         jPanel5.setBackground(new java.awt.Color(204, 255, 255));
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel5.add(CRITERIA_OUTOF, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, 70, 41));
+        jPanel5.add(CRITERIA_OUTOF, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 70, 41));
 
         jLabel9.setText("OUT OF NO. (ex. /10)");
-        jPanel5.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 130, -1));
+        jPanel5.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 100, 130, -1));
 
         jLabel14.setText("CRITERIA TITLE");
-        jPanel5.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 100, -1));
-        jPanel5.add(CRITERIA_TITLE, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 253, 41));
+        jPanel5.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 100, -1));
+        jPanel5.add(CRITERIA_TITLE, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 253, 41));
 
         jButton6.setText("ADD CRITERIA");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -438,24 +482,63 @@ public class DASHBOARD extends javax.swing.JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
-        jPanel5.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 220, 40));
+        jPanel5.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 220, 40));
 
-        CRITERIA.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 116, 330, 350));
+        CRITERIA.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 330, 250));
 
         CRITERIA_TABLE.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "id", "Tittle", "Out of"
             }
         ));
         jScrollPane2.setViewportView(CRITERIA_TABLE);
 
-        CRITERIA.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 60, 490, 530));
+        CRITERIA.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 20, 440, 510));
+
+        CRITERIA_USED.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Title", "Out Of"
+            }
+        ));
+        jScrollPane4.setViewportView(CRITERIA_USED);
+
+        CRITERIA.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 320, 330, 310));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("CURRENTLY USED CRITERIA FOR JUDGING");
+        CRITERIA.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 300, 30));
+
+        jButton8.setText("Delete");
+        CRITERIA.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 60, 100, 30));
+
+        jButton9.setText("Remove");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+        CRITERIA.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 640, 100, 30));
+
+        jButton10.setText("Update");
+        CRITERIA.add(jButton10, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 20, 100, 30));
+
+        jButton11.setText("Use");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
+        CRITERIA.add(jButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 540, 100, 30));
 
         PAGES.add(CRITERIA, "CRITERIA");
 
@@ -599,6 +682,64 @@ public class DASHBOARD extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        int selectedRow = CRITERIA_USED.getSelectedRow();
+
+        if (selectedRow != -1) {
+            int id = Integer.parseInt(CRITERIA_USED.getValueAt(selectedRow, 0).toString());
+
+            try {
+                String query = "UPDATE criteria SET isUsed = ? WHERE criteria_id = ?";
+                pst = conn.prepareStatement(query);
+                pst.setBoolean(1, false);
+                pst.setInt(2, id);
+
+                pst.executeUpdate();
+
+                DISPLAY_CRITERIA();
+                DISPLAY_USED_CRITERIA();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a row from the table.");
+        }
+
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        int selectedRow = CRITERIA_TABLE.getSelectedRow();
+
+        if (selectedRow != -1) {
+            int id = Integer.parseInt(CRITERIA_TABLE.getValueAt(selectedRow, 0).toString());
+
+            try {
+                String query = "UPDATE criteria SET isUsed = ? WHERE criteria_id = ?";
+                pst = conn.prepareStatement(query);
+                pst.setBoolean(1, true);
+                pst.setInt(2, id);
+
+                pst.executeUpdate();
+
+                DISPLAY_CRITERIA();
+                DISPLAY_USED_CRITERIA();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a row from the table.");
+        }
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        LOGIN s = new LOGIN();
+
+        s.setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_jButton12ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -613,23 +754,32 @@ public class DASHBOARD extends javax.swing.JFrame {
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DASHBOARD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ADMIN.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DASHBOARD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ADMIN.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DASHBOARD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ADMIN.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DASHBOARD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ADMIN.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DASHBOARD().setVisible(true);
+                new ADMIN().setVisible(true);
             }
         });
     }
@@ -653,6 +803,7 @@ public class DASHBOARD extends javax.swing.JFrame {
     private javax.swing.JTextField CRITERIA_OUTOF;
     private javax.swing.JTable CRITERIA_TABLE;
     private javax.swing.JTextField CRITERIA_TITLE;
+    private javax.swing.JTable CRITERIA_USED;
     private javax.swing.JPanel JUDGES;
     private javax.swing.JTable JUDGE_TABLE_ACCOUNTS;
     private javax.swing.JTable LIST_OF_CANDIDATES_TABLE;
@@ -661,12 +812,17 @@ public class DASHBOARD extends javax.swing.JFrame {
     private javax.swing.JPanel TABULATION;
     private javax.swing.JButton UPLOAD_BUTTON;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -674,6 +830,7 @@ public class DASHBOARD extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -689,6 +846,7 @@ public class DASHBOARD extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
 
@@ -723,6 +881,12 @@ public class DASHBOARD extends javax.swing.JFrame {
             pst.execute();
 
             JOptionPane.showMessageDialog(null, "Candidate is added");
+
+            CANDIDATE_NAME.setText("");
+            CANDIDATE_AGE.setText("");
+            CANDIDATE_SELECTED_GENDER.setText("");
+            selectedImageData = null;
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -816,6 +980,14 @@ public class DASHBOARD extends javax.swing.JFrame {
             } else if (selectedCategory.contains("Teenager") && selectedCategory.contains("Female")) {
                 pst.setString(1, "Teenager");
                 pst.setString(2, "Female");
+            } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Male")) {
+                pst.setString(1, "Kids");
+                pst.setString(2, "Male");
+            } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Female")) {
+                pst.setString(1, "Kids");
+                pst.setString(2, "Female");
+            } else {
+                System.out.println("Invalid selected category:" + selectedCategory);
             }
 
             rs = pst.executeQuery();
@@ -837,7 +1009,6 @@ public class DASHBOARD extends javax.swing.JFrame {
 
             LIST_OF_CANDIDATES_TABLE.setCellSelectionEnabled(false);
             LIST_OF_CANDIDATES_TABLE.setModel(tableModel);
-            tableModel.fireTableDataChanged();
             // Refresh the table to update its content
             tableModel.fireTableDataChanged();
         } catch (Exception e) {
@@ -928,25 +1099,59 @@ public class DASHBOARD extends javax.swing.JFrame {
 
     private void DISPLAY_CRITERIA() {
         try {
-            String query = "SELECT title, outof FROM criteria";
+            String query = "SELECT criteria_id, title, outof FROM criteria WHERE isUsed = false";
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
 
             DefaultTableModel tableModel = new DefaultTableModel();
+
+            tableModel.addColumn("id");
             tableModel.addColumn("Title");
             tableModel.addColumn("Out of");
 
             // Populate the table model with data from the result set
             while (rs.next()) {
+                int id = rs.getInt("criteria_id");
+
                 String title = rs.getString("title");
                 String outof = rs.getString("outof");
 
                 // Add a row to the table model
-                tableModel.addRow(new Object[]{title, outof});
+                tableModel.addRow(new Object[]{id, title, outof});
             }
 
             // Set the table model for the existing JTable component
             CRITERIA_TABLE.setModel(tableModel);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void DISPLAY_USED_CRITERIA() {
+        try {
+            String query = "SELECT criteria_id, title, outof FROM criteria WHERE isUsed = true";
+            pst = conn.prepareStatement(query);
+            rs = pst.executeQuery();
+
+            DefaultTableModel tableModel = new DefaultTableModel();
+            tableModel.addColumn("id");
+
+            tableModel.addColumn("Title");
+            tableModel.addColumn("Out of");
+
+            // Populate the table model with data from the result set
+            while (rs.next()) {
+                int id = rs.getInt("criteria_id");
+                String title = rs.getString("title");
+                String outof = rs.getString("outof");
+
+                // Add a row to the table model
+                tableModel.addRow(new Object[]{id, title, outof});
+            }
+
+            // Set the table model for the existing JTable component
+            CRITERIA_USED.setModel(tableModel);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
