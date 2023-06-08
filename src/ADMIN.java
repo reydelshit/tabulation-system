@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -44,6 +45,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -84,9 +86,9 @@ public class ADMIN extends javax.swing.JFrame {
         RETRIEVE_CANDIDATE_FORTABULATION();
         TABULATION_FETCH_BASED_ON_CRITERIA();
 
-//        OVERALL_WINNER();
+        CRITERIA_WINNER();
+        OVERALL_WINNER_BYCATEGORY();
 
-//        CRITERIA_WINNER();
         CANDIDATE_SELECTED_GENDER.setVisible(false);
 
         cardLayout = (CardLayout) (PAGES.getLayout());
@@ -232,15 +234,22 @@ public class ADMIN extends javax.swing.JFrame {
 
         CANDIDATE_CATEGORY_DROPDOWN_WINNERS.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Object selectedCategory = CANDIDATE_CATEGORY_DROPDOWN_WINNERS.getSelectedItem();
+                String selectedCategory = (String) CANDIDATE_CATEGORY_DROPDOWN_WINNERS.getSelectedItem();
                 OVERALL_WINNER_BYCATEGORY();
                 CRITERIA_WINNER();
 
-//                if (selectedCategory.equals("All")) {
-//                    OVERALL_WINNER();
-//                } else {
-////                    OVERALL_WINNER_BYCATEGORY();
-//                }
+                if (selectedCategory.contains("Teenager") && selectedCategory.contains("Male")) {
+                    WINNER_CATEGORY_TITLE.setText("TEENAGER (MALE)");
+                } else if (selectedCategory.contains("Teenager") && selectedCategory.contains("Female")) {
+                    WINNER_CATEGORY_TITLE.setText("TEENAGER (FEMALE)");
+                } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Male")) {
+                    WINNER_CATEGORY_TITLE.setText("KIDS (MALE)");
+                } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Female")) {
+                    WINNER_CATEGORY_TITLE.setText("KIDS (FEMALE)");
+                } else {
+                    System.out.println("Invalid selected category: " + selectedCategory);
+                    return;
+                }
             }
         });
     }
@@ -267,22 +276,6 @@ public class ADMIN extends javax.swing.JFrame {
         jButton13 = new javax.swing.JButton();
         PAGES = new javax.swing.JPanel();
         MAIN_PANEL = new javax.swing.JPanel();
-        JUDGES = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        CREATE_FULLNAME = new javax.swing.JTextField();
-        CREATE_USERNAME = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        CREATE_WARNING = new javax.swing.JLabel();
-        CREATE_PASSWORD = new javax.swing.JPasswordField();
-        CREATE_REPASSWORD = new javax.swing.JPasswordField();
-        jLabel13 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        JUDGE_TABLE_ACCOUNTS = new javax.swing.JTable();
         CANDITATES = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
@@ -303,6 +296,30 @@ public class ADMIN extends javax.swing.JFrame {
         CANDIDATE_CATEGORY_DROPDOWN = new javax.swing.JComboBox<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         LIST_OF_CANDIDATES_TABLE = new javax.swing.JTable();
+        jButton16 = new javax.swing.JButton();
+        jButton17 = new javax.swing.JButton();
+        CANDIDATE_FOR_UPDATE_DECIDER = new javax.swing.JLabel();
+        CANDIDATE_FOR_UPDATE_ID = new javax.swing.JLabel();
+        JUDGES = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        CREATE_FULLNAME = new javax.swing.JTextField();
+        CREATE_USERNAME = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        CREATE_WARNING = new javax.swing.JLabel();
+        CREATE_PASSWORD = new javax.swing.JPasswordField();
+        CREATE_REPASSWORD = new javax.swing.JPasswordField();
+        jLabel13 = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        JUDGE_TABLE_ACCOUNTS = new javax.swing.JTable();
+        jButton14 = new javax.swing.JButton();
+        jButton15 = new javax.swing.JButton();
+        JUDGE_UPDATE_DECIDER = new javax.swing.JLabel();
+        JUDGE_UPDATE_ID = new javax.swing.JLabel();
         CRITERIA = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         CRITERIA_OUTOF = new javax.swing.JTextField();
@@ -310,6 +327,8 @@ public class ADMIN extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         CRITERIA_TITLE = new javax.swing.JTextField();
         jButton6 = new javax.swing.JButton();
+        CRITERIA_ID_FORUPDATE = new javax.swing.JLabel();
+        CRITERIA_UPDATE_DECIDER = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         CRITERIA_TABLE = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -335,6 +354,13 @@ public class ADMIN extends javax.swing.JFrame {
         TABULATION_CANDIDATE_ID = new javax.swing.JLabel();
         WINNERS = new javax.swing.JPanel();
         CANDIDATE_CATEGORY_DROPDOWN_WINNERS = new javax.swing.JComboBox<>();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        NGEKOY = new javax.swing.JTable();
+        WINNER_CATEGORY = new javax.swing.JLabel();
+        WINNER_CATEGORY_SCORES = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        WINNER_CATEGORY_TITLE = new javax.swing.JLabel();
+        WINNER_IMAGE_WINNER = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -411,93 +437,6 @@ public class ADMIN extends javax.swing.JFrame {
         );
 
         PAGES.add(MAIN_PANEL, "card4");
-
-        JUDGES.setBackground(new java.awt.Color(204, 255, 255));
-        JUDGES.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel3.setBackground(new java.awt.Color(26, 46, 53));
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 217, 90));
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("CREATE JUDGE ACCOUNT");
-        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 290, 30));
-
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 217, 90));
-        jLabel8.setText("FULL NAME");
-        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, 80, 20));
-
-        jLabel10.setText("CLECK");
-        jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jLabel10MousePressed(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                jLabel10MouseReleased(evt);
-            }
-        });
-        jPanel3.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 230, 50, 40));
-
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(255, 217, 90));
-        jLabel11.setText("ENTER USERNAME");
-        jPanel3.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 160, 110, 20));
-        jPanel3.add(CREATE_FULLNAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, 230, 30));
-        jPanel3.add(CREATE_USERNAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 180, 230, 30));
-
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(255, 217, 90));
-        jLabel12.setText("ENTER PASSWORD");
-        jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, 110, 20));
-
-        CREATE_WARNING.setForeground(new java.awt.Color(255, 217, 90));
-        CREATE_WARNING.setText(" ");
-        jPanel3.add(CREATE_WARNING, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 340, 140, 20));
-        jPanel3.add(CREATE_PASSWORD, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 242, 230, 30));
-
-        CREATE_REPASSWORD.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                CREATE_REPASSWORDKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                CREATE_REPASSWORDKeyTyped(evt);
-            }
-        });
-        jPanel3.add(CREATE_REPASSWORD, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 300, 230, 30));
-
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 217, 90));
-        jLabel13.setText("RE-ENTER PASSWORD");
-        jPanel3.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 280, 130, 20));
-
-        jButton5.setText("CREATE");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-        jPanel3.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 380, 170, 40));
-
-        JUDGES.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 400, 530));
-
-        JUDGE_TABLE_ACCOUNTS.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(JUDGE_TABLE_ACCOUNTS);
-
-        JUDGES.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 90, 520, 530));
-
-        PAGES.add(JUDGES, "PAGE_2");
 
         CANDITATES.setBackground(new java.awt.Color(102, 102, 0));
         CANDITATES.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -597,9 +536,140 @@ public class ADMIN extends javax.swing.JFrame {
             LIST_OF_CANDIDATES_TABLE.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        CANDITATES.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 130, -1, 530));
+        CANDITATES.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 120, -1, 490));
+
+        jButton16.setText("Delete");
+        jButton16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton16ActionPerformed(evt);
+            }
+        });
+        CANDITATES.add(jButton16, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 630, 100, 30));
+
+        jButton17.setText("Update");
+        jButton17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton17ActionPerformed(evt);
+            }
+        });
+        CANDITATES.add(jButton17, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 630, 100, 30));
+
+        CANDIDATE_FOR_UPDATE_DECIDER.setText("update decider");
+        CANDITATES.add(CANDIDATE_FOR_UPDATE_DECIDER, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 90, -1, -1));
+
+        CANDIDATE_FOR_UPDATE_ID.setText("id update");
+        CANDITATES.add(CANDIDATE_FOR_UPDATE_ID, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 90, -1, -1));
 
         PAGES.add(CANDITATES, "PAGE_1");
+
+        JUDGES.setBackground(new java.awt.Color(204, 255, 255));
+        JUDGES.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel3.setBackground(new java.awt.Color(26, 46, 53));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 217, 90));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("CREATE JUDGE ACCOUNT");
+        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 290, 30));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 217, 90));
+        jLabel8.setText("FULL NAME");
+        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, 80, 20));
+
+        jLabel10.setText("CLECK");
+        jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel10MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jLabel10MouseReleased(evt);
+            }
+        });
+        jPanel3.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 230, 50, 40));
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 217, 90));
+        jLabel11.setText("ENTER USERNAME");
+        jPanel3.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 160, 110, 20));
+        jPanel3.add(CREATE_FULLNAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, 230, 30));
+        jPanel3.add(CREATE_USERNAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 180, 230, 30));
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 217, 90));
+        jLabel12.setText("ENTER PASSWORD");
+        jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, 110, 20));
+
+        CREATE_WARNING.setForeground(new java.awt.Color(255, 217, 90));
+        CREATE_WARNING.setText(" ");
+        jPanel3.add(CREATE_WARNING, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 340, 140, 20));
+        jPanel3.add(CREATE_PASSWORD, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 242, 230, 30));
+
+        CREATE_REPASSWORD.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                CREATE_REPASSWORDKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                CREATE_REPASSWORDKeyTyped(evt);
+            }
+        });
+        jPanel3.add(CREATE_REPASSWORD, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 300, 230, 30));
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 217, 90));
+        jLabel13.setText("RE-ENTER PASSWORD");
+        jPanel3.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 280, 130, 20));
+
+        jButton5.setText("CREATE");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 380, 170, 40));
+
+        JUDGES.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 400, 530));
+
+        JUDGE_TABLE_ACCOUNTS.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(JUDGE_TABLE_ACCOUNTS);
+
+        JUDGES.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 90, 520, 440));
+
+        jButton14.setText("Delete");
+        jButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton14ActionPerformed(evt);
+            }
+        });
+        JUDGES.add(jButton14, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 540, 100, 30));
+
+        jButton15.setText("Update");
+        jButton15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton15ActionPerformed(evt);
+            }
+        });
+        JUDGES.add(jButton15, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 540, 100, 30));
+
+        JUDGE_UPDATE_DECIDER.setText("update decider");
+        JUDGES.add(JUDGE_UPDATE_DECIDER, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 50, 100, -1));
+
+        JUDGE_UPDATE_ID.setText("id update");
+        JUDGES.add(JUDGE_UPDATE_ID, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 50, -1, -1));
+
+        PAGES.add(JUDGES, "PAGE_2");
 
         CRITERIA.setBackground(new java.awt.Color(102, 102, 0));
         CRITERIA.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -615,13 +685,19 @@ public class ADMIN extends javax.swing.JFrame {
         jPanel5.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 100, -1));
         jPanel5.add(CRITERIA_TITLE, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 253, 41));
 
-        jButton6.setText("ADD CRITERIA");
+        jButton6.setText("Submit");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
         jPanel5.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 220, 40));
+
+        CRITERIA_ID_FORUPDATE.setText("id update");
+        jPanel5.add(CRITERIA_ID_FORUPDATE, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, -1, -1));
+
+        CRITERIA_UPDATE_DECIDER.setText("no");
+        jPanel5.add(CRITERIA_UPDATE_DECIDER, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 10, -1, -1));
 
         CRITERIA.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 330, 250));
 
@@ -634,8 +710,11 @@ public class ADMIN extends javax.swing.JFrame {
             }
         ));
         jScrollPane2.setViewportView(CRITERIA_TABLE);
+        if (CRITERIA_TABLE.getColumnModel().getColumnCount() > 0) {
+            CRITERIA_TABLE.getColumnModel().getColumn(0).setMaxWidth(20);
+        }
 
-        CRITERIA.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 20, 440, 510));
+        CRITERIA.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 20, 490, 510));
 
         CRITERIA_USED.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -658,6 +737,11 @@ public class ADMIN extends javax.swing.JFrame {
         CRITERIA.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 300, 30));
 
         jButton8.setText("Delete");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
         CRITERIA.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 60, 100, 30));
 
         jButton9.setText("Remove");
@@ -669,6 +753,11 @@ public class ADMIN extends javax.swing.JFrame {
         CRITERIA.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 640, 100, 30));
 
         jButton10.setText("Update");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
         CRITERIA.add(jButton10, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 20, 100, 30));
 
         jButton11.setText("Use");
@@ -765,7 +854,47 @@ public class ADMIN extends javax.swing.JFrame {
         WINNERS.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         CANDIDATE_CATEGORY_DROPDOWN_WINNERS.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Teenager(Male)", "Teenager(Female)", "Kids(Male)", "Kids(Female)" }));
-        WINNERS.add(CANDIDATE_CATEGORY_DROPDOWN_WINNERS, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 40, 140, 30));
+        WINNERS.add(CANDIDATE_CATEGORY_DROPDOWN_WINNERS, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 70, 140, 30));
+
+        NGEKOY.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane7.setViewportView(NGEKOY);
+
+        WINNERS.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 340, -1, 180));
+
+        WINNER_CATEGORY.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        WINNER_CATEGORY.setForeground(new java.awt.Color(255, 255, 255));
+        WINNER_CATEGORY.setText("NAMEE");
+        WINNERS.add(WINNER_CATEGORY, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 280, 40));
+
+        WINNER_CATEGORY_SCORES.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        WINNER_CATEGORY_SCORES.setForeground(new java.awt.Color(255, 255, 255));
+        WINNER_CATEGORY_SCORES.setText("WINNERS BASED ON CRITERIA");
+        WINNERS.add(WINNER_CATEGORY_SCORES, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 280, 40));
+
+        jLabel20.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel20.setText("WINNERS BASED ON CRITERIA");
+        WINNERS.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 290, 280, 40));
+
+        WINNER_CATEGORY_TITLE.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        WINNER_CATEGORY_TITLE.setForeground(new java.awt.Color(255, 255, 255));
+        WINNER_CATEGORY_TITLE.setText("NAMEE");
+        WINNERS.add(WINNER_CATEGORY_TITLE, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 280, 40));
+
+        WINNER_IMAGE_WINNER.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        WINNER_IMAGE_WINNER.setForeground(new java.awt.Color(255, 255, 255));
+        WINNER_IMAGE_WINNER.setText("IMAGE HERE");
+        WINNERS.add(WINNER_IMAGE_WINNER, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 150, 450, 490));
 
         PAGES.add(WINNERS, "WINNERS");
 
@@ -956,6 +1085,146 @@ public class ADMIN extends javax.swing.JFrame {
         cardLayout.show(PAGES, "WINNERS");
     }//GEN-LAST:event_jButton13ActionPerformed
 
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        int selectedRow = CRITERIA_TABLE.getSelectedRow();
+        String id = CRITERIA_TABLE.getValueAt(selectedRow, 0).toString();
+
+        try {
+            String query = "DELETE FROM criteria WHERE criteria_id = ?";
+            pst = conn.prepareStatement(query);
+            pst.setString(1, id);
+
+            int rowsDeleted = pst.executeUpdate();
+            if (rowsDeleted > 0) {
+                JOptionPane.showMessageDialog(null, "Criteria deleted successfully!");
+                DISPLAY_CRITERIA();
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to delte criteria.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        int selectedRow = CRITERIA_TABLE.getSelectedRow();
+        String id = CRITERIA_TABLE.getValueAt(selectedRow, 0).toString();
+        String title = CRITERIA_TABLE.getValueAt(selectedRow, 1).toString();
+        String outOf = CRITERIA_TABLE.getValueAt(selectedRow, 2).toString();
+
+        CRITERIA_ID_FORUPDATE.setText(String.valueOf(id));
+        CRITERIA_UPDATE_DECIDER.setText("update");
+
+        CRITERIA_TITLE.setText(title);
+        CRITERIA_OUTOF.setText(outOf);
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        int selectedRow = JUDGE_TABLE_ACCOUNTS.getSelectedRow();
+        String id = JUDGE_TABLE_ACCOUNTS.getValueAt(selectedRow, 0).toString();
+
+        try {
+            String query = "DELETE FROM judge WHERE judge_id = ?";
+            pst = conn.prepareStatement(query);
+            pst.setString(1, id);
+
+            int rowsDeleted = pst.executeUpdate();
+            if (rowsDeleted > 0) {
+                JOptionPane.showMessageDialog(null, "Judge deleted successfully!");
+                DISPLAY_ACCOUNT_JUDGE();
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to delete judge.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_jButton14ActionPerformed
+
+    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
+        int selectedRow = JUDGE_TABLE_ACCOUNTS.getSelectedRow();
+        String id = JUDGE_TABLE_ACCOUNTS.getValueAt(selectedRow, 0).toString();
+        String title = JUDGE_TABLE_ACCOUNTS.getValueAt(selectedRow, 1).toString();
+        String username = JUDGE_TABLE_ACCOUNTS.getValueAt(selectedRow, 2).toString();
+
+        JUDGE_UPDATE_ID.setText(String.valueOf(id));
+        JUDGE_UPDATE_DECIDER.setText("update");
+
+        CREATE_FULLNAME.setText(title);
+        CREATE_USERNAME.setText(username);
+
+
+    }//GEN-LAST:event_jButton15ActionPerformed
+
+    private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
+        int selectedRow = LIST_OF_CANDIDATES_TABLE.getSelectedRow();
+        String id = LIST_OF_CANDIDATES_TABLE.getValueAt(selectedRow, 0).toString();
+
+        try {
+            String query = "DELETE FROM candidate WHERE id = ?";
+            pst = conn.prepareStatement(query);
+            pst.setString(1, id);
+
+            int rowsDeleted = pst.executeUpdate();
+            if (rowsDeleted > 0) {
+                JOptionPane.showMessageDialog(null, "Candidate deleted successfully!");
+                RETRIEVE_CANDIDATE();
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to delete candidate.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_jButton16ActionPerformed
+
+    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+        int selectedRow = LIST_OF_CANDIDATES_TABLE.getSelectedRow();
+        String id = LIST_OF_CANDIDATES_TABLE.getValueAt(selectedRow, 0).toString();
+        String title = LIST_OF_CANDIDATES_TABLE.getValueAt(selectedRow, 1).toString();
+        String username = LIST_OF_CANDIDATES_TABLE.getValueAt(selectedRow, 2).toString();
+//        String gender = LIST_OF_CANDIDATES_TABLE.getValueAt(selectedRow, 2).toString();
+
+        CANDIDATE_FOR_UPDATE_ID.setText(String.valueOf(id));
+        CANDIDATE_FOR_UPDATE_DECIDER.setText("update");
+
+        CREATE_FULLNAME.setText(title);
+        CREATE_USERNAME.setText(username);
+
+        try {
+            String query = "SELECT name, age, gender, birthday, category, image FROM candidate WHERE id = ?";
+            pst = conn.prepareStatement(query);
+            pst.setInt(1, Integer.parseInt(id));
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                String name = rs.getString("name");
+                int age = rs.getInt("age");
+                Date birthday = rs.getDate("birthday");
+                byte[] imageData = rs.getBytes("image");
+                String gender = rs.getString("gender");
+
+                if (gender.equalsIgnoreCase("Male")) {
+                    CANDIDATE_MALE.setSelected(true);
+                } else if (gender.equalsIgnoreCase("Female")) {
+                    CANDIDATE_FEMALE.setSelected(true);
+                }
+
+                CANDIDATE_NAME.setText(name);
+                CANDIDATE_AGE.setText(String.valueOf(age));
+                CANDIDATE_BDATE.setDate(birthday);
+
+//                    RETRIEVE IMAGE 
+                ImageIcon imageIcon = new ImageIcon(imageData);
+                Image scaledImage = imageIcon.getImage().getScaledInstance(CANDIDATE_IMAGE_LABEL.getWidth(), CANDIDATE_IMAGE_LABEL.getHeight(), Image.SCALE_SMOOTH);
+                CANDIDATE_IMAGE_LABEL.setIcon(new ImageIcon(scaledImage));
+                CANDIDATE_IMAGE_LABEL.setIcon(new ImageIcon(scaledImage));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+
+    }//GEN-LAST:event_jButton17ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1007,6 +1276,8 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> CANDIDATE_CATEGORY_DROPDOWN_TABULATION;
     private javax.swing.JComboBox<String> CANDIDATE_CATEGORY_DROPDOWN_WINNERS;
     private javax.swing.JRadioButton CANDIDATE_FEMALE;
+    private javax.swing.JLabel CANDIDATE_FOR_UPDATE_DECIDER;
+    private javax.swing.JLabel CANDIDATE_FOR_UPDATE_ID;
     private javax.swing.JLabel CANDIDATE_IMAGE_LABEL;
     private javax.swing.JRadioButton CANDIDATE_MALE;
     private javax.swing.JTextField CANDIDATE_NAME;
@@ -1018,14 +1289,19 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JTextField CREATE_USERNAME;
     private javax.swing.JLabel CREATE_WARNING;
     private javax.swing.JPanel CRITERIA;
+    private javax.swing.JLabel CRITERIA_ID_FORUPDATE;
     private javax.swing.JTextField CRITERIA_OUTOF;
     private javax.swing.JTable CRITERIA_TABLE;
     private javax.swing.JTextField CRITERIA_TITLE;
+    private javax.swing.JLabel CRITERIA_UPDATE_DECIDER;
     private javax.swing.JTable CRITERIA_USED;
     private javax.swing.JPanel JUDGES;
     private javax.swing.JTable JUDGE_TABLE_ACCOUNTS;
+    private javax.swing.JLabel JUDGE_UPDATE_DECIDER;
+    private javax.swing.JLabel JUDGE_UPDATE_ID;
     private javax.swing.JTable LIST_OF_CANDIDATES_TABLE;
     private javax.swing.JPanel MAIN_PANEL;
+    private javax.swing.JTable NGEKOY;
     private javax.swing.JPanel PAGES;
     private javax.swing.JPanel TABULATION;
     private javax.swing.JLabel TABULATION_CANDIDATE_ID;
@@ -1037,11 +1313,19 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JLabel TABULATION_TOTAL_SCORES;
     private javax.swing.JButton UPLOAD_BUTTON;
     private javax.swing.JPanel WINNERS;
+    private javax.swing.JLabel WINNER_CATEGORY;
+    private javax.swing.JLabel WINNER_CATEGORY_SCORES;
+    private javax.swing.JLabel WINNER_CATEGORY_TITLE;
+    private javax.swing.JLabel WINNER_IMAGE_WINNER;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton15;
+    private javax.swing.JButton jButton16;
+    private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -1060,6 +1344,7 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1079,45 +1364,85 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
 
     private void ADD_CANDIDATES() {
 
         try {
-//            upload details to database 
-            Date selectedDate = CANDIDATE_BDATE.getDate();
-            String dateString = new java.sql.Date(selectedDate.getTime()).toString();
+            String sql;
+            if (CANDIDATE_FOR_UPDATE_DECIDER.getText().equals("update")) {
+                Date selectedDate = CANDIDATE_BDATE.getDate();
+                String dateString = new java.sql.Date(selectedDate.getTime()).toString();
 
-            String sql = "INSERT INTO candidate (name, birthday, age, gender, category, candidate_no, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            pst = conn.prepareStatement(sql);
-            pst.setString(1, CANDIDATE_NAME.getText());
-            pst.setString(2, dateString);
-            pst.setInt(3, Integer.parseInt(CANDIDATE_AGE.getText()));
-            pst.setString(4, CANDIDATE_SELECTED_GENDER.getText());
+                sql = "UPDATE candidate SET name = ?, birthday = ?, age = ?, gender = ?, category = ?, candidate_no = ? WHERE id = ?";
 
-            int storeAge = Integer.parseInt(CANDIDATE_AGE.getText());
-            int candidateNo;
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, CANDIDATE_NAME.getText());
+                pst.setString(2, dateString);
+                pst.setInt(3, Integer.parseInt(CANDIDATE_AGE.getText()));
+                pst.setString(4, CANDIDATE_SELECTED_GENDER.getText());
 
-            if (storeAge > 13) {
-                pst.setString(5, "Teenager");
-                candidateNo = GETCANDIDATE_NUMBER("Teenager", CANDIDATE_SELECTED_GENDER.getText());
+                int storeAge = Integer.parseInt(CANDIDATE_AGE.getText());
+                int candidateNo;
+
+                if (storeAge > 13) {
+                    pst.setString(5, "Teenager");
+                    candidateNo = GETCANDIDATE_NUMBER("Teenager", CANDIDATE_SELECTED_GENDER.getText());
+                } else {
+                    pst.setString(5, "Kids");
+                    candidateNo = GETCANDIDATE_NUMBER("Kids", CANDIDATE_SELECTED_GENDER.getText());
+                }
+
+                pst.setInt(6, candidateNo);
+
+                pst.setString(7, CANDIDATE_FOR_UPDATE_ID.getText());
+
+                pst.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "Successfully updated the candidate");
+
+                CANDIDATE_NAME.setText("");
+                CANDIDATE_AGE.setText("");
+                CANDIDATE_SELECTED_GENDER.setText("");
+                selectedImageData = null;
+                CANDIDATE_IMAGE_LABEL.setIcon(null);
             } else {
-                pst.setString(5, "Kids");
-                candidateNo = GETCANDIDATE_NUMBER("Kids", CANDIDATE_SELECTED_GENDER.getText());
+                Date selectedDate = CANDIDATE_BDATE.getDate();
+                String dateString = new java.sql.Date(selectedDate.getTime()).toString();
+
+                sql = "INSERT INTO candidate (name, birthday, age, gender, category, candidate_no, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, CANDIDATE_NAME.getText());
+                pst.setString(2, dateString);
+                pst.setInt(3, Integer.parseInt(CANDIDATE_AGE.getText()));
+                pst.setString(4, CANDIDATE_SELECTED_GENDER.getText());
+
+                int storeAge = Integer.parseInt(CANDIDATE_AGE.getText());
+                int candidateNo;
+
+                if (storeAge > 13) {
+                    pst.setString(5, "Teenager");
+                    candidateNo = GETCANDIDATE_NUMBER("Teenager", CANDIDATE_SELECTED_GENDER.getText());
+                } else {
+                    pst.setString(5, "Kids");
+                    candidateNo = GETCANDIDATE_NUMBER("Kids", CANDIDATE_SELECTED_GENDER.getText());
+                }
+
+                pst.setInt(6, candidateNo);
+                pst.setBytes(7, selectedImageData);
+
+                pst.execute();
+
+                JOptionPane.showMessageDialog(null, "Candidate is added");
+
+                CANDIDATE_NAME.setText("");
+                CANDIDATE_AGE.setText("");
+                CANDIDATE_SELECTED_GENDER.setText("");
+                selectedImageData = null;
             }
-
-            pst.setInt(6, candidateNo);
-            pst.setBytes(7, selectedImageData);
-
-            pst.execute();
-
-            JOptionPane.showMessageDialog(null, "Candidate is added");
-
-            CANDIDATE_NAME.setText("");
-            CANDIDATE_AGE.setText("");
-            CANDIDATE_SELECTED_GENDER.setText("");
-            selectedImageData = null;
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -1180,7 +1505,7 @@ public class ADMIN extends javax.swing.JFrame {
                 tableModel.addRow(new Object[]{id, name, candidateNo, pressMe});
             }
 
-            LIST_OF_CANDIDATES_TABLE.setCellSelectionEnabled(false);
+//            LIST_OF_CANDIDATES_TABLE.setCellSelectionEnabled(false);
             LIST_OF_CANDIDATES_TABLE.setModel(tableModel);
             tableModel.fireTableDataChanged();
             // Refresh the table to update its content
@@ -1259,18 +1584,46 @@ public class ADMIN extends javax.swing.JFrame {
     private void CREATE_ACCOUNT() {
         try {
 
-            String sql = "INSERT INTO judge (fullname, username, password, account_type) VALUES (?, ?, ?, ?)";
+            String sql;
+            if (JUDGE_UPDATE_DECIDER.getText().equals("update")) {
+                sql = "UPDATE judge SET fullname = ?, username = ?, password = ?, account_type = ? WHERE judge_id = ?";
 
-            pst = conn.prepareStatement(sql);
-            pst.setString(1, CREATE_FULLNAME.getText());
-            pst.setString(2, CREATE_USERNAME.getText());
-            String password = new String(CREATE_REPASSWORD.getPassword());
-            pst.setString(3, password);
-            pst.setString(4, "Judge");
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, CREATE_FULLNAME.getText());
+                pst.setString(2, CREATE_USERNAME.getText());
+                String password = new String(CREATE_REPASSWORD.getPassword());
+                pst.setString(3, password);
+                pst.setString(4, "Judge");
 
-            pst.execute();
+                pst.setInt(5, Integer.parseInt(JUDGE_UPDATE_ID.getText()));
 
-            JOptionPane.showMessageDialog(null, "Succesfully created a judge account");
+                pst.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "Successfully updated the judge account");
+
+                CREATE_FULLNAME.setText("");
+                CREATE_USERNAME.setText("");
+                CREATE_REPASSWORD.setText("");
+                CREATE_PASSWORD.setText("");
+            } else {
+                sql = "INSERT INTO judge (fullname, username, password, account_type) VALUES (?, ?, ?, ?)";
+
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, CREATE_FULLNAME.getText());
+                pst.setString(2, CREATE_USERNAME.getText());
+                String password = new String(CREATE_REPASSWORD.getPassword());
+                pst.setString(3, password);
+                pst.setString(4, "Judge");
+
+                pst.execute();
+
+                JOptionPane.showMessageDialog(null, "Succesfully created a judge account");
+
+                CREATE_FULLNAME.setText("");
+                CREATE_USERNAME.setText("");
+                CREATE_REPASSWORD.setText("");
+                CREATE_PASSWORD.setText("");
+            }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -1281,24 +1634,27 @@ public class ADMIN extends javax.swing.JFrame {
 
     private void DISPLAY_ACCOUNT_JUDGE() {
         try {
-            String query = "SELECT fullname, username, account_type FROM judge";
+            String query = "SELECT judge_id, fullname, username, account_type FROM judge";
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
 
             // Create the table model with column names
             DefaultTableModel tableModel = new DefaultTableModel();
+            tableModel.addColumn("id");
+
             tableModel.addColumn("Full Name");
             tableModel.addColumn("Username");
             tableModel.addColumn("Account Type");
 
             // Populate the table model with data from the result set
             while (rs.next()) {
+                int id = rs.getInt("judge_id");
                 String fullName = rs.getString("fullname");
                 String username = rs.getString("username");
                 String accountType = rs.getString("account_type");
 
                 // Add a row to the table model
-                tableModel.addRow(new Object[]{fullName, username, accountType});
+                tableModel.addRow(new Object[]{id, fullName, username, accountType});
             }
 
             // Set the table model for the existing JTable component
@@ -1311,17 +1667,37 @@ public class ADMIN extends javax.swing.JFrame {
 
     private void ADD_CRITERIA() {
         try {
+            String sql;
+            if (CRITERIA_UPDATE_DECIDER.getText().equals("update")) {
+                sql = "UPDATE criteria SET title = ?, outof = ?, isUsed = ? WHERE criteria_id = ?";
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, CRITERIA_TITLE.getText());
+                pst.setInt(2, Integer.parseInt(CRITERIA_OUTOF.getText()));
+                pst.setBoolean(3, false);
+                pst.setInt(4, Integer.parseInt(CRITERIA_ID_FORUPDATE.getText()));
 
-            String sql = "INSERT INTO criteria (title, outof, isUsed) VALUES (?, ?, ?)";
+                pst.executeUpdate();
 
-            pst = conn.prepareStatement(sql);
-            pst.setString(1, CRITERIA_TITLE.getText());
-            pst.setInt(2, Integer.parseInt(CRITERIA_OUTOF.getText()));
-            pst.setBoolean(3, false);
+                JOptionPane.showMessageDialog(null, "Succesfully updated the criteria");
+                CRITERIA_TITLE.setText("");
+                CRITERIA_OUTOF.setText("");
+                CRITERIA_ID_FORUPDATE.setText("");
+                CRITERIA_UPDATE_DECIDER.setText("");
 
-            pst.execute();
+            } else {
+                sql = "INSERT INTO criteria (title, outof, isUsed) VALUES (?, ?, ?)";
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, CRITERIA_TITLE.getText());
+                pst.setInt(2, Integer.parseInt(CRITERIA_OUTOF.getText()));
+                pst.setBoolean(3, false);
 
-            JOptionPane.showMessageDialog(null, "Succesfully added the criteria");
+                pst.execute();
+
+                JOptionPane.showMessageDialog(null, "Succesfully added the criteria");
+
+                CRITERIA_TITLE.setText("");
+                CRITERIA_OUTOF.setText("");
+            }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -1342,7 +1718,6 @@ public class ADMIN extends javax.swing.JFrame {
             tableModel.addColumn("Title");
             tableModel.addColumn("Out of");
 
-            // Populate the table model with data from the result set
             while (rs.next()) {
                 int id = rs.getInt("criteria_id");
 
@@ -1353,7 +1728,6 @@ public class ADMIN extends javax.swing.JFrame {
                 tableModel.addRow(new Object[]{id, title, outof});
             }
 
-            // Set the table model for the existing JTable component
             CRITERIA_TABLE.setModel(tableModel);
 
         } catch (Exception e) {
@@ -1544,10 +1918,12 @@ public class ADMIN extends javax.swing.JFrame {
     }
 
     private void OVERALL_WINNER_BYCATEGORY() {
+        WINNER_CATEGORY_TITLE.setText("TEENAGER (MALE)");
+
         try {
             String selectedCategory = (String) CANDIDATE_CATEGORY_DROPDOWN_WINNERS.getSelectedItem();
 
-            String query = "SELECT s.criteria_title, c.name AS candidate_name, s.outOf, s.judge_score, s.judge_id, j.fullname AS judge_name "
+            String query = "SELECT s.criteria_title, c.name AS candidate_name, c.image, s.outOf, s.judge_score, s.judge_id, j.fullname AS judge_name "
                     + "FROM scores s "
                     + "JOIN candidate c ON s.candidate_id = c.id "
                     + "JOIN judge j ON s.judge_id = j.judge_id "
@@ -1575,10 +1951,12 @@ public class ADMIN extends javax.swing.JFrame {
             double overallTotalScore = 0.0;
             int judgeCount = 0;
             String winner = null;
+            byte[] winnerImage = null;
 
             while (rs.next()) {
                 String candidateName = rs.getString("candidate_name");
                 double judgeScore = rs.getDouble("judge_score");
+                winnerImage = rs.getBytes("image");
 
                 // Update the total score for the current candidate
                 if (candidateTotalScores.containsKey(candidateName)) {
@@ -1609,17 +1987,24 @@ public class ADMIN extends javax.swing.JFrame {
                 if (totalScore > highestTotalScore) {
                     highestTotalScore = totalScore;
                     winner = candidateName;
+
                 }
             }
+            DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
             overallTotalScore = highestTotalScore * candidateTotalScores.size();
 
-            System.out.println("The winner is: " + winner);
-            System.out.println("Total score: " + overallTotalScore);
+            WINNER_CATEGORY.setText(winner);
+            WINNER_CATEGORY_SCORES.setText(String.valueOf(decimalFormat.format(overallTotalScore)));
 
+            // Set the candidate picture
+            ImageIcon imageIcon = new ImageIcon(winnerImage);
+            Image scaledImage = imageIcon.getImage().getScaledInstance(WINNER_IMAGE_WINNER.getWidth(), WINNER_IMAGE_WINNER.getHeight(), Image.SCALE_SMOOTH);
+            WINNER_IMAGE_WINNER.setIcon(new ImageIcon(scaledImage));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
+
     }
 
     private void CRITERIA_WINNER() {
@@ -1703,13 +2088,18 @@ public class ADMIN extends javax.swing.JFrame {
                 criterionWinners.put(criteriaTitle, winner);
             }
 
-            // Print the winners for each criterion
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("Criteria Title");
+            model.addColumn("Winner");
+
             for (Map.Entry<String, String> entry : criterionWinners.entrySet()) {
                 String criteriaTitle = entry.getKey();
                 String winner = entry.getValue();
-                System.out.println("Winner for \"" + criteriaTitle + "\" " + winner);
+
+                model.addRow(new Object[]{criteriaTitle, winner});
             }
 
+            NGEKOY.setModel(model);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
