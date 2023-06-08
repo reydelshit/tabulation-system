@@ -248,10 +248,25 @@ public class ADMIN extends javax.swing.JFrame {
                     WINNER_CATEGORY_TITLE.setText("KIDS (FEMALE)");
                 } else {
                     System.out.println("Invalid selected category: " + selectedCategory);
-                    return;
                 }
             }
         });
+        
+        
+        //        update set visible false 
+        CANDIDATE_FOR_UPDATE_DECIDER.setVisible(false);
+        CANDIDATE_FOR_UPDATE_ID.setVisible(false);
+
+        JUDGE_UPDATE_DECIDER.setVisible(false);
+        JUDGE_UPDATE_ID.setVisible(false);
+        
+        
+        CRITERIA_ID_FORUPDATE.setVisible(false);
+        CRITERIA_UPDATE_DECIDER.setVisible(false);
+        
+        TABULATION_CANDIDATE_ID.setVisible(false);
+
+
     }
 
     private byte[] selectedImageData;

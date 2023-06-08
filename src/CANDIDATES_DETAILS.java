@@ -53,6 +53,7 @@ public class CANDIDATES_DETAILS extends javax.swing.JFrame {
         CANDIDATES_DETAILS_CATEGORY = new javax.swing.JLabel();
         CANDIDATES_DETAILS_IMAGE = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        CANDIDATES_DETAILS_GENDER = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,12 +63,12 @@ public class CANDIDATES_DETAILS extends javax.swing.JFrame {
         CANDIDATES_DETAILS_NAME.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         CANDIDATES_DETAILS_NAME.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         CANDIDATES_DETAILS_NAME.setText("name");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_NAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 190, 240, 42));
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_NAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 150, 240, 42));
 
         CANDIDATES_DETAILS_AGE.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         CANDIDATES_DETAILS_AGE.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         CANDIDATES_DETAILS_AGE.setText("age");
-        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_AGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 240, 240, 42));
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_AGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 200, 240, 42));
 
         CANDIDATES_DETAILS_BIRTHDAY.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         CANDIDATES_DETAILS_BIRTHDAY.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -89,6 +90,11 @@ public class CANDIDATES_DETAILS extends javax.swing.JFrame {
             }
         });
         CANDIDATE_DETAILS.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 500, -1, -1));
+
+        CANDIDATES_DETAILS_GENDER.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        CANDIDATES_DETAILS_GENDER.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CANDIDATES_DETAILS_GENDER.setText("GENDER");
+        CANDIDATE_DETAILS.add(CANDIDATES_DETAILS_GENDER, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 250, 240, 42));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -143,11 +149,13 @@ public class CANDIDATES_DETAILS extends javax.swing.JFrame {
             }
         });
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel CANDIDATES_DETAILS_AGE;
     private javax.swing.JLabel CANDIDATES_DETAILS_BIRTHDAY;
     private javax.swing.JLabel CANDIDATES_DETAILS_CATEGORY;
+    private javax.swing.JLabel CANDIDATES_DETAILS_GENDER;
     private javax.swing.JLabel CANDIDATES_DETAILS_IMAGE;
     private javax.swing.JLabel CANDIDATES_DETAILS_NAME;
     private javax.swing.JPanel CANDIDATE_DETAILS;
@@ -158,7 +166,7 @@ public class CANDIDATES_DETAILS extends javax.swing.JFrame {
         try {
 
             if (ids != null) {
-                String query = "SELECT name, age, birthday, category, image FROM candidate WHERE id = ?";
+                String query = "SELECT name, age, gender, birthday, category, image FROM candidate WHERE id = ?";
                 pst = conn.prepareStatement(query);
                 pst.setInt(1, ids);
                 rs = pst.executeQuery();
@@ -166,12 +174,14 @@ public class CANDIDATES_DETAILS extends javax.swing.JFrame {
                 if (rs.next()) {
                     String name = rs.getString("name");
                     int age = rs.getInt("age");
+                    String gender = rs.getString("gender");
                     Date birthday = rs.getDate("birthday");
                     String height = rs.getString("category");
                     byte[] imageData = rs.getBytes("image");
 
                     CANDIDATES_DETAILS_NAME.setText(name);
                     CANDIDATES_DETAILS_AGE.setText(String.valueOf(age));
+                    CANDIDATES_DETAILS_GENDER.setText(gender);
 
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
                     String birthdayString = dateFormat.format(birthday);

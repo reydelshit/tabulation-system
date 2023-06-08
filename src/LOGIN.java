@@ -108,7 +108,7 @@ public class LOGIN extends javax.swing.JFrame {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPasswordField LOGIN_PASSWORD;
     private javax.swing.JTextField LOGIN_USERNAME;

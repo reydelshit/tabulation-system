@@ -70,6 +70,10 @@ public class JUDGE extends javax.swing.JFrame {
 
         candidatesDetails = new CANDIDATES_DETAILS();
         candidatesDetails.setVisible(false);
+        
+        
+        JUDGE_CANDIDATE_ID.setVisible(false);
+        JUDGE_ID_WELCOME.setVisible(false);
 
         CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -243,7 +247,7 @@ public class JUDGE extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Welcome ,");
-        TABULATION.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 20, 140, 50));
+        TABULATION.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 20, 140, 50));
 
         JUDGE_ID_WELCOME.setText("id diria");
         TABULATION.add(JUDGE_ID_WELCOME, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 30, 80, 40));
@@ -485,7 +489,6 @@ public class JUDGE extends javax.swing.JFrame {
             CRITERIA_TITLE_LABEL.setText("");
             CRITERIA_OUT_OF.setText("");
             CRITERIA_JUDGE_SCORE.setText("");
-            JUDGE_CANDIDATE_ID.setText("");
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
