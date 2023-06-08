@@ -3,8 +3,10 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,15 +21,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -70,6 +76,7 @@ public class ADMIN extends javax.swing.JFrame {
         DISPLAY_ACCOUNT_JUDGE();
         DISPLAY_CRITERIA();
         DISPLAY_USED_CRITERIA();
+        RETRIEVE_CANDIDATE_FORTABULATION();
 
         CANDIDATE_SELECTED_GENDER.setVisible(false);
 
@@ -102,32 +109,116 @@ public class ADMIN extends javax.swing.JFrame {
             }
         });
 
-//        CRITERIA_TABLE.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent evt) {
-//                JTable table = (JTable) evt.getSource();
-//                int row = table.getSelectedRow();
-//
-//                int id = Integer.parseInt(table.getValueAt(row, 0).toString());
-//
-//                try {
-//
-//                    String query = "UPDATE criteria SET isUsed = ? WHERE criteria_id = ?";
-//                    pst = conn.prepareStatement(query);
-//                    pst.setBoolean(1, true);
-//                    pst.setInt(2, id);
-//
-//                    pst.executeUpdate();
-//
-//                    DISPLAY_CRITERIA();
-//                    DISPLAY_USED_CRITERIA();
-//
-//                } catch (Exception e) {
-//                    JOptionPane.showMessageDialog(null, e);
-//                }
-//
-//            }
-//        });
+        CANDIDATE_CATEGORY_DROPDOWN_TABULATION.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Object selectedBatch = CANDIDATE_CATEGORY_DROPDOWN_TABULATION.getSelectedItem();
+                if (selectedBatch.equals("All")) {
+                    RETRIEVE_CANDIDATE_FORTABULATION();
+                } else {
+                    RETRIEVE_CANDIDATE_FORTABULATION_BYCATEGORY();
+
+                }
+            }
+        });
+
+        TABULATION_LIST_OF_CANDIDATES.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                JTable table = (JTable) evt.getSource();
+                int row = table.getSelectedRow();
+                int id = Integer.parseInt(table.getValueAt(row, 0).toString());
+
+                try {
+
+                    String query = "SELECT s.criteria_title, c.name AS candidate_name, s.outOf, s.judge_score, s.judge_id, j.fullname AS judge_name "
+                            + "FROM scores s "
+                            + "JOIN candidate c ON s.candidate_id = c.id "
+                            + "JOIN judge j ON s.judge_id = j.judge_id"
+                            + " WHERE c.id = ?";
+
+                    pst = conn.prepareStatement(query);
+                    pst.setInt(1, id);
+                    rs = pst.executeQuery();
+
+                    DefaultTableModel tableModel = new DefaultTableModel();
+                    tableModel.addColumn("Criteria Title");
+                    tableModel.addColumn("Candidate Name");
+                    tableModel.addColumn("Out Of (Max Score)");
+                    tableModel.addColumn("Judge's Score");
+                    tableModel.addColumn("Judge Name");
+
+                    Map<String, Double> criterionTotalScores = new HashMap<>();
+                    Map<String, Double> judgeScores = new HashMap<>(); // Store the sum of scores for each judge
+
+                    double overallTotalScore = 0.0;
+                    int overallTotalOutOf = 0;
+                    int judgeCount = 0;
+
+                    while (rs.next()) {
+                        String criteriaTitle = rs.getString("criteria_title");
+                        String candidateName = rs.getString("candidate_name");
+                        int outOf = rs.getInt("outOf");
+                        double judgeScore = rs.getDouble("judge_score");
+                        String judgeName = rs.getString("judge_name");
+
+                        double judgeScorePercentage = (judgeScore / outOf) * 100;
+
+                        // Update the total score for the current criterion
+                        if (criterionTotalScores.containsKey(criteriaTitle)) {
+                            double currentTotalScore = criterionTotalScores.get(criteriaTitle);
+                            currentTotalScore += judgeScorePercentage;
+                            criterionTotalScores.put(criteriaTitle, currentTotalScore);
+                        } else {
+                            criterionTotalScores.put(criteriaTitle, judgeScorePercentage);
+                        }
+
+                        // Update the sum of scores for the current judge
+                        if (judgeScores.containsKey(judgeName)) {
+                            double currentJudgeScore = judgeScores.get(judgeName);
+                            currentJudgeScore += judgeScorePercentage;
+                            judgeScores.put(judgeName, currentJudgeScore);
+                        } else {
+                            judgeScores.put(judgeName, judgeScorePercentage);
+                            judgeCount++; // Increment the judge count
+                        }
+
+                        tableModel.addRow(new Object[]{criteriaTitle, candidateName, outOf, judgeScore, judgeName});
+                    }
+
+                    TABULATION_TABLE.setModel(tableModel);
+
+// Set the layout manager of TABULATION_SCORES_CONTAINER to BoxLayout with vertical orientation
+                    TABULATION_SCORES_CONTAINER.setLayout(new BoxLayout(TABULATION_SCORES_CONTAINER, BoxLayout.Y_AXIS));
+
+                    for (Map.Entry<String, Double> entry : criterionTotalScores.entrySet()) {
+                        String criteriaTitle = entry.getKey();
+                        double totalScore = entry.getValue() / judgeCount; // Calculate the average score based on the number of judges
+
+                        overallTotalScore += totalScore;
+
+                        // Create a label to display the criterion and its total score
+                        JLabel criterionLabel = new JLabel(criteriaTitle);
+                        JLabel scoreLabel = new JLabel(String.valueOf(totalScore));
+
+                        // Add some vertical spacing between the labels
+                        TABULATION_SCORES_CONTAINER.add(Box.createVerticalStrut(10));
+
+                        // Add the labels to the scores panel
+                        TABULATION_SCORES_CONTAINER.add(criterionLabel);
+                        TABULATION_SCORES_CONTAINER.add(scoreLabel);
+                    }
+
+                    TABULATION_TOTAL_SCORES.setText(String.valueOf(overallTotalScore / judgeCount)); // Calculate the average overall score
+                    TABULATION_OUT_OF.setText(String.valueOf(100));
+
+                    TABULATION_SCORES_CONTAINER.revalidate();
+                    TABULATION_SCORES_CONTAINER.repaint();
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e);
+                }
+            }
+        });
     }
 
     private byte[] selectedImageData;
@@ -204,6 +295,17 @@ public class ADMIN extends javax.swing.JFrame {
         jButton10 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
         TABULATION = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        TABULATION_TABLE = new javax.swing.JTable();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        TABULATION_LIST_OF_CANDIDATES = new javax.swing.JTable();
+        CANDIDATE_CATEGORY_DROPDOWN_TABULATION = new javax.swing.JComboBox<>();
+        jPanel6 = new javax.swing.JPanel();
+        TABULATION_SCORES_CONTAINER = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
+        TABULATION_TOTAL_SCORES = new javax.swing.JLabel();
+        TABULATION_OUT_OF = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -543,19 +645,78 @@ public class ADMIN extends javax.swing.JFrame {
         PAGES.add(CRITERIA, "CRITERIA");
 
         TABULATION.setBackground(new java.awt.Color(255, 153, 153));
+        TABULATION.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout TABULATIONLayout = new javax.swing.GroupLayout(TABULATION);
-        TABULATION.setLayout(TABULATIONLayout);
-        TABULATIONLayout.setHorizontalGroup(
-            TABULATIONLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1076, Short.MAX_VALUE)
+        TABULATION_TABLE.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane5.setViewportView(TABULATION_TABLE);
+
+        TABULATION.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 60, 690, 410));
+
+        TABULATION_LIST_OF_CANDIDATES.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane6.setViewportView(TABULATION_LIST_OF_CANDIDATES);
+
+        TABULATION.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 300, 410));
+
+        CANDIDATE_CATEGORY_DROPDOWN_TABULATION.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Teenager(Male)", "Teenager(Female)", "Kids(Male)", "Kids(Female)" }));
+        TABULATION.add(CANDIDATE_CATEGORY_DROPDOWN_TABULATION, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 140, 30));
+
+        jPanel6.setBackground(new java.awt.Color(255, 204, 255));
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        TABULATION_SCORES_CONTAINER.setBackground(new java.awt.Color(255, 204, 255));
+
+        javax.swing.GroupLayout TABULATION_SCORES_CONTAINERLayout = new javax.swing.GroupLayout(TABULATION_SCORES_CONTAINER);
+        TABULATION_SCORES_CONTAINER.setLayout(TABULATION_SCORES_CONTAINERLayout);
+        TABULATION_SCORES_CONTAINERLayout.setHorizontalGroup(
+            TABULATION_SCORES_CONTAINERLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 160, Short.MAX_VALUE)
         );
-        TABULATIONLayout.setVerticalGroup(
-            TABULATIONLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 699, Short.MAX_VALUE)
+        TABULATION_SCORES_CONTAINERLayout.setVerticalGroup(
+            TABULATION_SCORES_CONTAINERLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 150, Short.MAX_VALUE)
         );
 
-        PAGES.add(TABULATION, "card6");
+        jPanel6.add(TABULATION_SCORES_CONTAINER, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 160, 150));
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel16.setText("/");
+        jPanel6.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 166, 10, 20));
+
+        TABULATION_TOTAL_SCORES.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TABULATION_TOTAL_SCORES.setText("0.0");
+        jPanel6.add(TABULATION_TOTAL_SCORES, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 160, 40, 30));
+
+        TABULATION_OUT_OF.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TABULATION_OUT_OF.setText("0.0");
+        jPanel6.add(TABULATION_OUT_OF, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 160, 40, 30));
+
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel17.setText("TOTAL SCORES:");
+        jPanel6.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 90, -1));
+
+        TABULATION.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 490, 280, 200));
+
+        PAGES.add(TABULATION, "TABULATION");
 
         jSplitPane1.setRightComponent(PAGES);
 
@@ -679,7 +840,7 @@ public class ADMIN extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
+        cardLayout.show(PAGES, "TABULATION");
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -788,6 +949,7 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JTextField CANDIDATE_AGE;
     private com.toedter.calendar.JDateChooser CANDIDATE_BDATE;
     private javax.swing.JComboBox<String> CANDIDATE_CATEGORY_DROPDOWN;
+    private javax.swing.JComboBox<String> CANDIDATE_CATEGORY_DROPDOWN_TABULATION;
     private javax.swing.JRadioButton CANDIDATE_FEMALE;
     private javax.swing.JLabel CANDIDATE_IMAGE_LABEL;
     private javax.swing.JRadioButton CANDIDATE_MALE;
@@ -810,6 +972,11 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JPanel MAIN_PANEL;
     private javax.swing.JPanel PAGES;
     private javax.swing.JPanel TABULATION;
+    private javax.swing.JTable TABULATION_LIST_OF_CANDIDATES;
+    private javax.swing.JLabel TABULATION_OUT_OF;
+    private javax.swing.JPanel TABULATION_SCORES_CONTAINER;
+    private javax.swing.JTable TABULATION_TABLE;
+    private javax.swing.JLabel TABULATION_TOTAL_SCORES;
     private javax.swing.JButton UPLOAD_BUTTON;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
@@ -830,6 +997,8 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -843,10 +1012,13 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
 
@@ -1153,6 +1325,90 @@ public class ADMIN extends javax.swing.JFrame {
             // Set the table model for the existing JTable component
             CRITERIA_USED.setModel(tableModel);
 
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void RETRIEVE_CANDIDATE_FORTABULATION() {
+        try {
+            DefaultTableModel tableModel = new DefaultTableModel();
+
+            // Clear the existing data in the table
+            tableModel.setRowCount(0);
+
+            String query = "SELECT id, name, candidate_no FROM candidate";
+            pst = conn.prepareStatement(query);
+            rs = pst.executeQuery();
+
+            // Define column names for the table
+            String[] columnNames = {"id", "Name", "Candidate No."};
+
+            tableModel.setColumnIdentifiers(columnNames);
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+
+                String name = rs.getString("name");
+                String candidate_no = rs.getString("candidate_no");
+
+                tableModel.addRow(new Object[]{id, name, candidate_no});
+            }
+
+            TABULATION_LIST_OF_CANDIDATES.setModel(tableModel);
+
+            tableModel.fireTableDataChanged();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void RETRIEVE_CANDIDATE_FORTABULATION_BYCATEGORY() {
+        try {
+            DefaultTableModel tableModel = new DefaultTableModel();
+
+            // Clear the existing data in the table
+            tableModel.setRowCount(0);
+            String selectedCategory = (String) CANDIDATE_CATEGORY_DROPDOWN_TABULATION.getSelectedItem();
+
+            String query = "SELECT id, name, candidate_no FROM candidate WHERE category = ? AND gender = ?";
+            pst = conn.prepareStatement(query);
+
+            pst = conn.prepareStatement(query);
+            if (selectedCategory.contains("Teenager") && selectedCategory.contains("Male")) {
+                pst.setString(1, "Teenager");
+                pst.setString(2, "Male");
+            } else if (selectedCategory.contains("Teenager") && selectedCategory.contains("Female")) {
+                pst.setString(1, "Teenager");
+                pst.setString(2, "Female");
+            } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Male")) {
+                pst.setString(1, "Kids");
+                pst.setString(2, "Male");
+            } else if (selectedCategory.contains("Kids") && selectedCategory.contains("Female")) {
+                pst.setString(1, "Kids");
+                pst.setString(2, "Female");
+            } else {
+                System.out.println("Invalid selected category: " + selectedCategory);
+                return;
+            }
+            rs = pst.executeQuery();
+            // Define column names for the table
+            String[] columnNames = {"id", "Name", "Candidate No."};
+
+            tableModel.setColumnIdentifiers(columnNames);
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+
+                String name = rs.getString("name");
+                String candidate_no = rs.getString("candidate_no");
+
+                tableModel.addRow(new Object[]{id, name, candidate_no});
+            }
+
+            TABULATION_LIST_OF_CANDIDATES.setModel(tableModel);
+
+            tableModel.fireTableDataChanged();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }

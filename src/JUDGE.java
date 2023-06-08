@@ -108,7 +108,10 @@ public class JUDGE extends javax.swing.JFrame {
 
                 if (columnSelected <= 4) {
                     String title = table.getValueAt(rowSelected, 1).toString();
+                    int id = Integer.parseInt(table.getValueAt(rowSelected, 0).toString());
+
                     CRITERIA_NAME.setText(title);
+                    JUDGE_CANDIDATE_ID.setText(Integer.toString(id));
                 }
 
                 int column = LIST_OF_CANDIDATES_FOR_JUDGE.getColumnModel().getColumnIndexAtX(evt.getX());
@@ -136,7 +139,7 @@ public class JUDGE extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         JUDGE_USED_CRITERIA = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
+        CRITERIA_JUDGE_SCORE = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         CRITERIA_OUT_OF = new javax.swing.JLabel();
         CRITERIA_TITLE_LABEL = new javax.swing.JLabel();
@@ -151,6 +154,7 @@ public class JUDGE extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         JUDGE_ID_WELCOME = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        JUDGE_CANDIDATE_ID = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -171,11 +175,11 @@ public class JUDGE extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(JUDGE_USED_CRITERIA);
 
-        TABULATION.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 40, 680, 230));
+        TABULATION.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 430, 680, 230));
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 255));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 380, 130, 40));
+        jPanel3.add(CRITERIA_JUDGE_SCORE, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 380, 130, 40));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("OUT OF");
@@ -191,10 +195,15 @@ public class JUDGE extends javax.swing.JFrame {
         jPanel3.add(CRITERIA_TITLE_LABEL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 380, 50));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setText("CRITERIA");
+        jLabel4.setText("Name");
         jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 80, 30));
 
         jButton3.setText("SUBMIT");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
         jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 500, 90, 40));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -221,14 +230,14 @@ public class JUDGE extends javax.swing.JFrame {
         ));
         jScrollPane3.setViewportView(LIST_OF_CANDIDATES_FOR_JUDGE);
 
-        TABULATION.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 340, 680, 330));
+        TABULATION.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, 680, 330));
 
         CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Teenager(Male)", "Teenager(Female)", "Kids(Male)", "Kids(Female)" }));
-        TABULATION.add(CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 300, 140, 30));
+        TABULATION.add(CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 30, 140, 30));
 
         JUDGE_NAME_WELCOME.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         JUDGE_NAME_WELCOME.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        JUDGE_NAME_WELCOME.setText("Welcome ,");
+        JUDGE_NAME_WELCOME.setText("Username");
         TABULATION.add(JUDGE_NAME_WELCOME, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 20, 140, 50));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -236,8 +245,8 @@ public class JUDGE extends javax.swing.JFrame {
         jLabel2.setText("Welcome ,");
         TABULATION.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 20, 140, 50));
 
-        JUDGE_ID_WELCOME.setText("jLabel1");
-        TABULATION.add(JUDGE_ID_WELCOME, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 30, 80, 40));
+        JUDGE_ID_WELCOME.setText("id diria");
+        TABULATION.add(JUDGE_ID_WELCOME, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 30, 80, 40));
 
         jButton1.setText("Logout");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -246,6 +255,9 @@ public class JUDGE extends javax.swing.JFrame {
             }
         });
         TABULATION.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 660, -1, -1));
+
+        JUDGE_CANDIDATE_ID.setText(" id sa candidate");
+        TABULATION.add(JUDGE_CANDIDATE_ID, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 30, 80, 40));
 
         getContentPane().add(TABULATION, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1320, 699));
 
@@ -259,6 +271,10 @@ public class JUDGE extends javax.swing.JFrame {
         s.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        SUBMIT_SCORE();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -297,9 +313,11 @@ public class JUDGE extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> CANDIDATE_CATEGORY_DROPDOWN_FORJUDGE;
+    private javax.swing.JTextField CRITERIA_JUDGE_SCORE;
     private javax.swing.JLabel CRITERIA_NAME;
     private javax.swing.JLabel CRITERIA_OUT_OF;
     private javax.swing.JLabel CRITERIA_TITLE_LABEL;
+    private javax.swing.JLabel JUDGE_CANDIDATE_ID;
     private javax.swing.JLabel JUDGE_ID_WELCOME;
     private javax.swing.JLabel JUDGE_NAME_WELCOME;
     private javax.swing.JTable JUDGE_USED_CRITERIA;
@@ -314,7 +332,6 @@ public class JUDGE extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
     private void DISPLAY_USED_CRITERIA() {
@@ -445,6 +462,35 @@ public class JUDGE extends javax.swing.JFrame {
             tableModel.fireTableDataChanged();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void SUBMIT_SCORE() {
+        try {
+
+            String sql = "INSERT INTO scores (criteria_title, outOf, judge_score, judge_id, candidate_id) VALUES (?, ?, ?, ?, ?)";
+
+            pst = conn.prepareStatement(sql);
+            pst.setString(1, CRITERIA_TITLE_LABEL.getText());
+            pst.setString(2, CRITERIA_OUT_OF.getText());
+            pst.setString(3, CRITERIA_JUDGE_SCORE.getText());
+            pst.setString(4, JUDGE_ID_WELCOME.getText());
+            pst.setString(5, JUDGE_CANDIDATE_ID.getText());
+
+
+            pst.execute();
+
+            JOptionPane.showMessageDialog(null, "Succesfully submitted the score");
+
+            CRITERIA_TITLE_LABEL.setText("");
+            CRITERIA_OUT_OF.setText("");
+            CRITERIA_JUDGE_SCORE.setText("");
+            JUDGE_CANDIDATE_ID.setText("");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, "Error");
+
         }
     }
 
